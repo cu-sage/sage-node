@@ -4,8 +4,8 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
-  studentId: String,
-  studentName: String
+  id: Schema.Types.ObjectId,
+  name: String
 });
 
 StudentSchema.virtual('dateCreated')

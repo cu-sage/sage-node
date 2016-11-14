@@ -1,6 +1,6 @@
 global._ = require('lodash');
 
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 var chai = require('chai');

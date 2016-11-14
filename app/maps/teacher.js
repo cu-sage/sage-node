@@ -2,12 +2,12 @@
 var databaseToApiMap = {
   _id: 'id',
   name: 'name',
-  avatar_url: 'avatarUrl',
+  classes: 'classes'
 };
 
 var apiToDatabaseMap = _.invert(databaseToApiMap);
 
-var StudentMap = {
+var TeacherMap = {
   apiToDatabase: object => {
     var mappedObject = {};
 
@@ -37,4 +37,4 @@ var StudentMap = {
   }
 };
 
-module.exports = StudentMap;
+module.exports = TeacherMap;

@@ -22,6 +22,9 @@ module.exports = {
             "error",
             "unix"
         ],
+        "no-unused-vars": [
+            "warn"
+        ],
         "quotes": [
             "error",
             "single"

@@ -22,8 +22,7 @@ var TeacherMap = {
     return mappedObject;
   },
 
-  databaseToApi: document => {
-    var object = document.toObject();
+  databaseToApi: object => {
     var mappedObject = {};
 
     _.forOwn(object, (value, key) => {

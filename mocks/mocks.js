@@ -5,15 +5,16 @@ var glob = require('glob');
 var config = require('../config/config');
 
 var mocks = {
-  Student: require('./data/students')
-}
+  Student: require('./data/students'),
+  Teacher: require('./data/teachers')
+};
 
 var numberOfObjectsToLoad = 0;
 var numberOfObjectsLoaded = 0;
 
-_.forOwn(mocks, (data, model) => {
+_.forOwn(mocks, (data) => {
   numberOfObjectsToLoad += data.length;
-})
+});
 
 function run() {
   mongoose.connect(config.db);
@@ -29,7 +30,7 @@ function run() {
 
   _.forOwn(mocks, (data, model) => {
     data.forEach(object => {
-      mongoose.model(model)(object).save((err, doc) => {
+      mongoose.model(model)(object).save({ validateBeforeSave: false }, (err) => {
         if (err) {
           console.log(`Did not insert object into ${model}s:`);
           console.log(object);
@@ -40,7 +41,7 @@ function run() {
           process.exit();
         }
       });
-    })
+    });
   });
 }
 

@@ -1,7 +1,7 @@
 var Student = require('../models/student');
 var StudentMap = require('../maps/student');
 
-StudentService = {
+var StudentService = {
   findAll: () => {
     return Student.find()
       .then(students => students.map(StudentMap.databaseToApi));
@@ -25,6 +25,6 @@ StudentService = {
     return student.save()
       .then(StudentMap.databaseToApi);
   }
-}
+};
 
 module.exports = StudentService;

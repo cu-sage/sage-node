@@ -23,7 +23,7 @@ var StudentMap = {
   },
 
   databaseToApi: document => {
-    object = document.toObject();
+    var object = document.toObject();
     var mappedObject = {};
 
     _.forOwn(object, (value, key) => {
@@ -36,6 +36,6 @@ var StudentMap = {
 
     return mappedObject;
   }
-}
+};
 
 module.exports = StudentMap;

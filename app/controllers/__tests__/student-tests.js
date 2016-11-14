@@ -32,7 +32,7 @@ describe('StudentController', () => {
       StudentController(app);
 
       expect(app.use.calledWith('/students')).to.be.true;
-    })
+    });
   });
 
   describe('.findAll()', () => {

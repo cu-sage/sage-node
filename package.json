@@ -9,6 +9,7 @@
     "test:coverage": "nyc npm test",
     "test:unit": "mocha --recursive test/middleware test/models test/routes",
     "test:integration": "mocha --recursive test/integration",
+    "lint": "eslint app",
     "gulp": "gulp",
     "mocks": "node mocks/mocks.js"
   },
@@ -29,6 +30,7 @@
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
     "debug": "^2.2.0",
+    "eslint": "^3.10.1",
     "gulp": "^3.9.0",
     "gulp-livereload": "^3.8.0",
     "gulp-nodemon": "^2.0.2",

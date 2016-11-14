@@ -6,8 +6,6 @@ var StudentService = require('../student');
 
 describe('StudentService', () => {
   var studentId = Symbol('studentId');
-  var studentProperties = Symbol('studentProperties');
-  var studentDocument = Symbol('studentDocument');
   var apiStudent = Symbol('apiStudent');
   var apiStudents = Symbol('apiStudents');
   var databaseStudent = Symbol('databaseStudent');

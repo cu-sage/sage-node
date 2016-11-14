@@ -3,7 +3,7 @@ var StudentService = require('../services/student');
 
 var StudentController = function(app) {
   app.use('/students', router);
-}
+};
 
 StudentController.findAll = (req, res, next) => {
   return StudentService.findAll()

@@ -12,7 +12,7 @@ var StudentSchema = new Schema({
   }
 });
 
-StudentSchema.virtual('dateCreated').get(() => this._id.getTimestamp())
+StudentSchema.virtual('dateCreated').get(() => this._id.getTimestamp());
 
 var Student = mongoose.model('Student', StudentSchema);
 

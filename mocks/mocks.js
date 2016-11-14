@@ -31,7 +31,7 @@ function run() {
     data.forEach(object => {
       mongoose.model(model)(object).save((err, doc) => {
         if (err) {
-          console.log(`Did not to insert object into ${model}s:`);
+          console.log(`Did not insert object into ${model}s:`);
           console.log(object);
         }
 

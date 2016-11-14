@@ -4,8 +4,14 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
-  id: Schema.Types.ObjectId,
-  name: String
+  name: {
+    type: String,
+    trim: true,
+    minlength: 1
+  },
+  avatarUrl: {
+    type: String
+  }
 });
 
 StudentSchema.virtual('dateCreated')
@@ -13,5 +19,4 @@ StudentSchema.virtual('dateCreated')
     return this._id.getTimestamp();
   });
 
-mongoose.model('Student', StudentSchema);
-
+var Student = mongoose.model('Student', StudentSchema);

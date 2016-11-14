@@ -1,17 +1,40 @@
 
+var databaseToApiMap = {
+  _id: 'id',
+  name: 'name',
+  avatar_url: 'avatarUrl',
+};
+
+var apiToDatabaseMap = _.invert(databaseToApiMap);
+
 var StudentMap = {
   apiToDatabase: object => {
-    return _.omitBy({
-      _id: object.id,
-      name: object.name
-    }, _.isNil);
+    var mappedObject = {};
+
+    _.forOwn(object, (value, key) => {
+      var mappedKey = apiToDatabaseMap[key];
+
+      if (mappedKey) {
+        mappedObject[mappedKey] = value;
+      }
+    });
+
+    return mappedObject;
   },
 
   databaseToApi: document => {
-    return _.omitBy({
-      id: document._id,
-      name: document.name
-    }, _.isNil);
+    object = document.toObject();
+    var mappedObject = {};
+
+    _.forOwn(object, (value, key) => {
+      var mappedKey = databaseToApiMap[key];
+
+      if (mappedKey) {
+        mappedObject[mappedKey] = value;
+      }
+    });
+
+    return mappedObject;
   }
 }
 

@@ -1,17 +1,18 @@
-// Example model
-
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
-  studentId: String,
-  studentName: String
+  name: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  avatarUrl: {
+    type: String,
+    trim: true
+  }
 });
 
-StudentSchema.virtual('dateCreated')
-  .get(function(){
-    return this._id.getTimestamp();
-  });
+var Student = mongoose.model('Student', StudentSchema);
 
-mongoose.model('Student', StudentSchema);
-
+module.exports = Student;

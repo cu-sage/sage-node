@@ -4,17 +4,15 @@ var Response = require('../utils/response');
 
 var TeacherService = {
   findAll: () => {
-    return Teacher.find()
-      .then(teachers => teachers.map(teacher => teacher.toObject()))
+    return Teacher.find().lean()
       .then(teachers => teachers.map(TeacherMap.databaseToApi));
   },
 
   findById: id => {
-    return Teacher.findById(id)
+    return Teacher.findById(id).lean()
       .then(teacher =>
         teacher ? teacher : Promise.reject(Response[404]('teacher not found'))
       )
-      .then(teacher => teacher.toObject())
       .then(TeacherMap.databaseToApi);
   },
 

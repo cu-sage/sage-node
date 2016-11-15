@@ -2,19 +2,18 @@ var Teacher = require('../models/teacher');
 var TeacherMap = require('../maps/teacher');
 var Response = require('../utils/response');
 
+var rejectEmptyResult = teacher =>
+  teacher ? teacher : Promise.reject(Response[404]('teacher not found'));
+
 var TeacherService = {
   findAll: () => {
-    return Teacher.find()
-      .then(teachers => teachers.map(teacher => teacher.toObject()))
+    return Teacher.find().lean()
       .then(teachers => teachers.map(TeacherMap.databaseToApi));
   },
 
   findById: id => {
-    return Teacher.findById(id)
-      .then(teacher =>
-        teacher ? teacher : Promise.reject(Response[404]('teacher not found'))
-      )
-      .then(teacher => teacher.toObject())
+    return Teacher.findById(id).lean()
+      .then(rejectEmptyResult)
       .then(TeacherMap.databaseToApi);
   },
 

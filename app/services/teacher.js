@@ -24,6 +24,31 @@ var TeacherService = {
     return teacher.save()
       .then(teacher => teacher.toObject())
       .then(TeacherMap.databaseToApi);
+  },
+
+  addClass: (teacherId, classIdToAdd) => {
+    return Teacher.findById(teacherId)
+      .then(teacher => {
+        if (_.find(teacher.classes, classId =>
+            classId.toString() === classIdToAdd)) {
+          return teacher;
+        }
+        teacher.classes.push(classIdToAdd);
+        teacher.markModified('classes');
+        return teacher.save();
+      });
+  },
+
+  removeClass: (teacherId, classIdToRemove) => {
+    if (!teacherId) {
+      return Promise.reject();
+    }
+    return Teacher.findById(teacherId)
+      .then(teacher => {
+        _.remove(teacher.classes, classId => classId.toString() === classIdToRemove);
+        teacher.markModified('classes');
+        return teacher.save();
+      });
   }
 };
 

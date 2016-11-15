@@ -2,6 +2,9 @@ var Student = require('../models/student');
 var StudentMap = require('../maps/student');
 var Response = require('../utils/response');
 
+var rejectEmptyResult = student =>
+  student ? student : Promise.reject(Response[404]('student not found'));
+
 var StudentService = {
   findAll: () => {
     return Student.find().lean()
@@ -10,9 +13,7 @@ var StudentService = {
 
   findById: id => {
     return Student.findById(id).lean()
-      .then(student =>
-        student ? student : Promise.reject(Response[404]('student not found'))
-      )
+      .then(rejectEmptyResult)
       .then(StudentMap.databaseToApi);
   },
 

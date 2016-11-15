@@ -22,6 +22,9 @@ var addTeacherName = aClass => {
     });
 };
 
+var rejectEmptyResult = aClass =>
+  aClass ? aClass : Promise.reject(Response[404]('class not found'));
+
 var ClassService = {
   findAll: () => {
     return Class.find().lean()
@@ -31,9 +34,7 @@ var ClassService = {
 
   findById: id => {
     return Class.findById(id).lean()
-      .then(aClass =>
-        aClass ? aClass : Promise.reject(Response[404]('class not found'))
-      )
+      .then(rejectEmptyResult)
       .then(addTeacherName)
       .then(ClassMap.databaseToApi);
   },

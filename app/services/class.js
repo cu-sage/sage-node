@@ -56,9 +56,12 @@ var ClassService = {
       )
       .then(aClass => {
         aClass.teacher = teacherId;
-        return aClass.save();
+        return Promise.all([
+          aClass.save(),
+          TeacherService.addClass(teacherId, classId)
+        ]);
       })
-      .then(aClass => aClass.toObject())
+      .then(results => results[0].toObject())
       .then(ClassMap.databaseToApi);
   },
 
@@ -68,10 +71,14 @@ var ClassService = {
         aClass ? aClass : Promise.reject(Response[404]('class not found'))
       )
       .then(aClass => {
+        var teacherId = aClass.teacher;
         aClass.teacher = undefined;
-        return aClass.save();
+        return Promise.all([
+          aClass.save(),
+          TeacherService.removeClass(teacherId, classId)
+        ]);
       })
-      .then(aClass => aClass.toObject())
+      .then(result => result[0].toObject())
       .then(ClassMap.databaseToApi);
   },
 

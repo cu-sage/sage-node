@@ -8,12 +8,6 @@ var express = require('express'),
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(config.db);
-var db = mongoose.connection;
-db.on('error', function () {
-  throw new Error('unable to connect to database at ' + config.db);
-});
-
 var models = glob.sync(config.root + '/app/models/*.js');
 models.forEach(function (model) {
   require(model);
@@ -22,7 +16,3 @@ models.forEach(function (model) {
 var app = express();
 
 module.exports = require('./config/express')(app, config);
-
-app.listen(config.port, function () {
-  console.log('Express server listening on port ' + config.port);
-});

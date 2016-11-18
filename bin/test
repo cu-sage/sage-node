@@ -1,0 +1,21 @@
+
+global._ = require('lodash');
+
+var http = require('http'),
+  config = require('../config/config'),
+  mongoose = require('mongoose');
+var app = require('../app');
+
+var testDb = 'mongodb://localhost/sage-node-test';
+var port = '8082';
+
+mongoose.connect(testDb);
+var db = mongoose.connection;
+db.on('error', function () {
+  throw new Error('unable to connect to database at ' + testDb);
+});
+
+console.log('preparing: Express server listening on port ' + port);
+app.listen(port, function() {
+  console.log('Express server listening on port ' + port);
+});

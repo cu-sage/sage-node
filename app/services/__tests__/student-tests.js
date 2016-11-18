@@ -1,6 +1,6 @@
 
 var Student = require('../../models/student');
-var StudentMap = require('../../maps/student');
+var StudentMap = require('../../formats/student');
 
 var StudentService = require('../student');
 

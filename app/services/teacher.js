@@ -10,10 +10,16 @@ var rejectEmptyResult = teacher =>
 var formatTeacher = teacher => {
   teacher = teacher.toObject();
 
-  teacher.classes = teacher.classes.map(ClassFormat.toApi);
-  teacher = TeacherFormat.toApi(teacher);
+  return Class.find({ teacher: teacher._id }, '_id name')
+    .lean()
+    .then(classes => {
+      classes = classes.map(ClassFormat.toApi);
 
-  return teacher;
+      teacher.classes = classes;
+      teacher = TeacherFormat.toApi(teacher);
+
+      return teacher;
+    });
 };
 
 var formatTeachers = teachers => {
@@ -23,7 +29,6 @@ var formatTeachers = teachers => {
 var TeacherService = {
   findAll: () => {
     return Teacher.find()
-      .populate('classes', '_id name')
       .then(teachers => {
         return teachers;
       })
@@ -32,7 +37,6 @@ var TeacherService = {
 
   findById: id => {
     return Teacher.findById(id)
-      .populate('classes', '_id name')
       .then(rejectEmptyResult)
       .then(formatTeacher);
   },

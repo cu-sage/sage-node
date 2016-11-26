@@ -1,3 +1,4 @@
+var Class = require('../models/class');
 var ClassFormat = require('../formats/class');
 var Student = require('../models/student');
 var StudentFormat = require('../formats/student');
@@ -11,10 +12,16 @@ var __rejectEmptyResult = student =>
 var __formatStudent = (student) => {
   student = student.toObject();
 
-  student.classes = student.classes.map(ClassFormat.toApi);
-  student = StudentFormat.toApi(student);
+  return Class.find({ students: student._id }, '_id name')
+    .lean()
+    .then(classes => {
+      classes = classes.map(ClassFormat.toApi);
 
-  return student;
+      student.classes = classes;
+      student = StudentFormat.toApi(student);
+
+      return student;
+    });
 };
 
 var __formatStudents = (students) => {
@@ -25,7 +32,6 @@ var StudentService = function() {};
 
 StudentService.prototype.findAll = () => {
   return Student.find()
-    .populate('classes', '_id name')
     .then(__formatStudents);
 };
 
@@ -35,7 +41,6 @@ StudentService.prototype.findById = id => {
   }
 
   return Student.findById(id)
-    .populate('classes', '_id name')
     .then(__rejectEmptyResult)
     .then(__formatStudent);
 };
@@ -45,7 +50,6 @@ StudentService.prototype.create = properties => {
   var student = new Student(properties);
 
   return student.save()
-    .then(student => student.populate('classes', '_id name').execPopulate())
     .then(__formatStudent);
 };
 

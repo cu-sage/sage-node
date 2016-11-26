@@ -15,13 +15,17 @@ var __rejectEmptyResult = aClass =>
   aClass ? aClass : Promise.reject(Response[404]('class not found'));
 
 var __formatClass = aClass => {
-  aClass = aClass.toObject();
-
-  aClass.students = aClass.students.map(StudentFormat.toApi);
-  aClass.teacher = TeacherFormat.toApi(aClass.teacher);
-  aClass = ClassFormat.toApi(aClass);
-
-  return aClass;
+  return aClass
+    .populate('students', '_id name')
+    .populate('teacher', '_id name')
+    .execPopulate()
+    .then(aClass => {
+      aClass = aClass.toObject();
+      aClass.students = aClass.students.map(StudentFormat.toApi);
+      aClass.teacher = TeacherFormat.toApi(aClass.teacher);
+      aClass = ClassFormat.toApi(aClass);
+      return aClass;
+    });
 };
 
 var __formatClasses = classes => {
@@ -31,23 +35,17 @@ var __formatClasses = classes => {
 var ClassService = {
   findAll: () => {
     return Class.find()
-        .populate('students', '_id name')
-        .populate('teacher', '_id name')
       .then(__formatClasses);
   },
 
   findById: id => {
     return Class.findById(id)
-        .populate('students', '_id name')
-        .populate('teacher', '_id name')
       .then(__rejectEmptyResult)
       .then(__formatClass);
   },
 
   findByTeacher: teacherId => {
     return Class.find({ teacher: teacherId })
-        .populate('students', '_id name')
-        .populate('teacher', '_id name')
       .then(__formatClass);
   },
 
@@ -57,8 +55,6 @@ var ClassService = {
 
     return aClass.save()
       .then(aClass => {
-        aClass.populate('students', '_id name');
-        aClass.populate('teacher', '_id name');
         return aClass.execPopulate();
       })
       .then(__formatClass);
@@ -84,21 +80,6 @@ var ClassService = {
           return aClass;
         }
       })
-      .then(aClass => {
-        return Teacher.findById(teacherId)
-          .then(teacher => {
-            teacher.classes.push(classId);
-            teacher.markModified('classes');
-
-            return teacher.save()
-              .then(() => aClass);
-          });
-      })
-      .then(aClass => {
-        aClass.populate('students', '_id name');
-        aClass.populate('teacher', '_id name');
-        return aClass.execPopulate();
-      })
       .then(__formatClass);
   },
 
@@ -108,12 +89,7 @@ var ClassService = {
       .then(aClass => {
         aClass.teacher = undefined;
 
-        return aClass.save()
-          .then(aClass => {
-            aClass.populate('students', '_id name');
-            aClass.populate('teacher', '_id name');
-            return aClass.execPopulate();
-          });
+        return aClass.save();
       })
       .then(__formatClass);
   },
@@ -127,22 +103,7 @@ var ClassService = {
           return aClass;
         }
         aClass.students.push(studentIdToAdd);
-        return aClass.save()
-          .then(aClass => {
-            aClass.populate('students', '_id name');
-            aClass.populate('teacher', '_id name');
-            return aClass.execPopulate();
-          });
-      })
-      .then(aClass => {
-        return Student.findById(studentIdToAdd)
-          .then(student => {
-            student.classes.push(classId);
-            student.markModified('classes');
-
-            return student.save()
-              .then(() => aClass);
-          });
+        return aClass.save();
       })
       .then(__formatClass);
   },
@@ -155,12 +116,7 @@ var ClassService = {
           studentId.toString() === studentIdToRemove
         );
         aClass.markModified('students');
-        return aClass.save()
-          .then(aClass => {
-            aClass.populate('students', '_id name');
-            aClass.populate('teacher', '_id name');
-            return aClass.execPopulate();
-          });
+        return aClass.save();
       })
       .then(__formatClass);
   }

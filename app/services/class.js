@@ -1,92 +1,88 @@
-var TeacherService = require('./teacher');
+
 var Class = require('../models/class');
-var ClassMap = require('../maps/class');
+var ClassFormat = require('../formats/class');
+var StudentFormat = require('../formats/student');
+var TeacherFormat = require('../formats/teacher');
 var Response = require('../utils/response');
 
 // 'class' is a reserved word, so use aClass instead
 
-/**
- *  Adds teacherName onto the document
- *  @param {Document} aClass - the class document
- *  @returns {Document} aClass - the class document
- */
-var addTeacherName = aClass => {
-  if (_.isNil(aClass.teacher)) {
-    return aClass;
-  }
+var __rejectEmptyResult = aClass =>
+  aClass ? aClass : Promise.reject(Response[404]('class not found'));
 
-  return TeacherService.findById(aClass.teacher)
-    .then(teacher => {
-      aClass.teacherName = teacher.name;
+var __formatClass = aClass => {
+  return aClass
+    .populate('students', '_id name')
+    .populate('teacher', '_id name')
+    .execPopulate()
+    .then(aClass => {
+      aClass = aClass.toObject();
+      aClass.students = aClass.students.map(StudentFormat.toApi);
+
+      if (aClass.teacher) {
+        aClass.teacher = TeacherFormat.toApi(aClass.teacher);
+      }
+
+      aClass = ClassFormat.toApi(aClass);
       return aClass;
     });
 };
 
-var rejectEmptyResult = aClass =>
-  aClass ? aClass : Promise.reject(Response[404]('class not found'));
+var __formatClasses = classes => {
+  return Promise.all(classes.map(__formatClass));
+};
 
 var ClassService = {
   findAll: () => {
-    return Class.find().lean()
-      .then(classes => Promise.all(classes.map(addTeacherName)))
-      .then(classes => classes.map(ClassMap.databaseToApi));
+    return Class.find()
+      .then(__formatClasses);
   },
 
   findById: id => {
-    return Class.findById(id).lean()
-      .then(rejectEmptyResult)
-      .then(addTeacherName)
-      .then(ClassMap.databaseToApi);
+    return Class.findById(id)
+      .then(__rejectEmptyResult)
+      .then(__formatClass);
+  },
+
+  findByTeacher: teacherId => {
+    return Class.find({ teacher: teacherId })
+      .then(__formatClass);
   },
 
   create: properties => {
-    properties = ClassMap.apiToDatabase(properties);
+    properties = ClassFormat.fromApi(properties);
     var aClass = new Class(properties);
 
     return aClass.save()
-      .then(addTeacherName)
-      .then(aClass => aClass.toObject())
-      .then(ClassMap.databaseToApi);
+      .then(aClass => {
+        return aClass.execPopulate();
+      })
+      .then(__formatClass);
   },
 
   updateTeacher: (classId, teacherId) => {
     return Class.findById(classId)
-      .then(aClass =>
-        aClass ? aClass : Promise.reject(Response[404]('class not found'))
-      )
+      .then(__rejectEmptyResult)
       .then(aClass => {
         aClass.teacher = teacherId;
-        return Promise.all([
-          aClass.save(),
-          TeacherService.addClass(teacherId, classId)
-        ]);
+        return aClass.save();
       })
-      .then(results => results[0].toObject())
-      .then(ClassMap.databaseToApi);
+      .then(__formatClass);
   },
 
   removeTeacher: (classId) => {
     return Class.findById(classId)
-      .then(aClass =>
-        aClass ? aClass : Promise.reject(Response[404]('class not found'))
-      )
+      .then(__rejectEmptyResult)
       .then(aClass => {
-        var teacherId = aClass.teacher;
         aClass.teacher = undefined;
-        return Promise.all([
-          aClass.save(),
-          TeacherService.removeClass(teacherId, classId)
-        ]);
+        return aClass.save();
       })
-      .then(result => result[0].toObject())
-      .then(ClassMap.databaseToApi);
+      .then(__formatClass);
   },
 
   addStudent: (classId, studentIdToAdd) => {
     return Class.findById(classId)
-      .then(aClass =>
-        aClass ? aClass : Promise.reject(Response[404]('class not found'))
-      )
+      .then(__rejectEmptyResult)
       .then(aClass => {
         if (_.find(aClass.students, studentId =>
             studentId.toString() === studentIdToAdd)) {
@@ -95,15 +91,12 @@ var ClassService = {
         aClass.students.push(studentIdToAdd);
         return aClass.save();
       })
-      .then(aClass => aClass.toObject())
-      .then(ClassMap.databaseToApi);
+      .then(__formatClass);
   },
 
   removeStudent: (classId, studentIdToRemove) => {
     return Class.findById(classId)
-      .then(aClass =>
-        aClass ? aClass : Promise.reject(Response[404]('class not found'))
-      )
+      .then(__rejectEmptyResult)
       .then(aClass => {
         _.remove(aClass.students, studentId =>
           studentId.toString() === studentIdToRemove
@@ -111,8 +104,7 @@ var ClassService = {
         aClass.markModified('students');
         return aClass.save();
       })
-      .then(aClass => aClass.toObject())
-      .then(ClassMap.databaseToApi);
+      .then(__formatClass);
   }
 };
 

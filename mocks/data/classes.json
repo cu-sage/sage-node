@@ -1,0 +1,49 @@
+[
+  {
+    "_id": "582f7c5a2dbc87700d3779df",
+    "name": "The Magic School Bus",
+    "leadership_board": [],
+    "students": [
+      "582f7c1c1489e46faecd12e0",
+      "582f7c1c1489e46faecd12df",
+      "582f7c1c1489e46faecd12de",
+      "582f7c1c1489e46faecd12e3",
+      "582f7c1c1489e46faecd12e1",
+      "582f7c1c1489e46faecd12e2",
+      "582f7c1c1489e46faecd12e4",
+      "582f7c1c1489e46faecd12e5"
+    ],
+    "teacher": "582a1be95789252c48ada270"
+  },
+  {
+    "_id": "582f7c5a2dbc87700d3779de",
+    "name": "Potions",
+    "leadership_board": [],
+    "students": [
+      "582f7c1c1489e46faecd12db",
+      "582f7c1c1489e46faecd12dc",
+      "582f7c1c1489e46faecd12dd"
+    ],
+    "teacher": "582a1c125789252c48ada271"
+  },
+  {
+    "_id": "582f81e048de86761a7fb67b",
+    "name": "Advanced Potions",
+    "leadership_board": [],
+    "students": [
+      "582f7c1c1489e46faecd12dc"
+    ],
+    "teacher": "582a1c125789252c48ada271"
+  },
+  {
+    "_id": "582f7e45d35339723018e6d2",
+    "name": "Defense Against Dark Arts",
+    "leadership_board": [],
+    "students": [
+      "582f7c1c1489e46faecd12db",
+      "582f7c1c1489e46faecd12dc",
+      "582f7c1c1489e46faecd12dd"
+    ],
+    "teacher": "582f7e45d35339723018e6d1"
+  }
+]

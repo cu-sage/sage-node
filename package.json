@@ -4,11 +4,12 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node ./bin/www",
+    "start:test": "node ./bin/test",
     "test": "NODE_ENV=test mocha --opts mocha.opts ./**/__tests__/*.js",
     "test:coverage": "nyc npm test",
     "test:unit": "mocha --recursive test/middleware test/models test/routes",
-    "test:integration": "mocha --recursive test/integration",
+    "test:integration": "mocha --opts mocha.opts --recursive --bail integration-tests",
     "lint": "eslint app",
     "gulp": "gulp",
     "mocks": "node mocks/mocks.js"
@@ -25,11 +26,14 @@
     "mongoose": "^4.1.2",
     "mongoose-id-validator": "^0.4.0",
     "morgan": "^1.6.1",
+    "request": "^2.78.0",
+    "request-promise-native": "^1.0.3",
     "serve-favicon": "^2.3.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "chai-things": "^0.2.0",
     "debug": "^2.2.0",
     "eslint": "^3.10.1",
     "gulp": "^3.9.0",

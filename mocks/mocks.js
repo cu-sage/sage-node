@@ -1,4 +1,6 @@
 
+/*eslint no-console: "allow"*/
+
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var glob = require('glob');
@@ -6,7 +8,8 @@ var config = require('../config/config');
 
 var mocks = {
   Student: require('./data/students'),
-  Teacher: require('./data/teachers')
+  Teacher: require('./data/teachers'),
+  Class: require('./data/classes')
 };
 
 var numberOfObjectsToLoad = 0;
@@ -16,7 +19,7 @@ _.forOwn(mocks, (data) => {
   numberOfObjectsToLoad += data.length;
 });
 
-function run() {
+function startup() {
   mongoose.connect(config.db);
   var db = mongoose.connection;
   db.on('error', function () {
@@ -27,7 +30,17 @@ function run() {
   models.forEach(function (model) {
     require(model);
   });
+}
 
+function drop() {
+  return Promise.all([
+    mongoose.model('Student').remove({}).exec(),
+    mongoose.model('Teacher').remove({}).exec(),
+    mongoose.model('Class').remove({}).exec()
+  ]);
+}
+
+function run() {
   _.forOwn(mocks, (data, model) => {
     data.forEach(object => {
       mongoose.model(model)(object).save({ validateBeforeSave: false }, (err) => {
@@ -45,4 +58,7 @@ function run() {
   });
 }
 
+startup();
+
 run();
+// drop().then(run);

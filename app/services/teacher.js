@@ -1,54 +1,52 @@
+var Class = require('../models/class');
+var ClassFormat = require('../formats/class');
 var Teacher = require('../models/teacher');
-var TeacherMap = require('../maps/teacher');
+var TeacherFormat = require('../formats/teacher');
 var Response = require('../utils/response');
 
 var rejectEmptyResult = teacher =>
   teacher ? teacher : Promise.reject(Response[404]('teacher not found'));
 
+var formatTeacher = teacher => {
+  teacher = teacher.toObject();
+
+  return Class.find({ teacher: teacher._id }, '_id name')
+    .lean()
+    .then(classes => {
+      classes = classes.map(ClassFormat.toApi);
+
+      teacher.classes = classes;
+      teacher = TeacherFormat.toApi(teacher);
+
+      return teacher;
+    });
+};
+
+var formatTeachers = teachers => {
+  return Promise.all(teachers.map(formatTeacher));
+};
+
 var TeacherService = {
   findAll: () => {
-    return Teacher.find().lean()
-      .then(teachers => teachers.map(TeacherMap.databaseToApi));
+    return Teacher.find()
+      .then(teachers => {
+        return teachers;
+      })
+      .then(formatTeachers);
   },
 
   findById: id => {
-    return Teacher.findById(id).lean()
+    return Teacher.findById(id)
       .then(rejectEmptyResult)
-      .then(TeacherMap.databaseToApi);
+      .then(formatTeacher);
   },
 
   create: properties => {
-    properties = TeacherMap.apiToDatabase(properties);
+    properties = TeacherFormat.fromApi(properties);
     var teacher = new Teacher(properties);
 
     return teacher.save()
-      .then(teacher => teacher.toObject())
-      .then(TeacherMap.databaseToApi);
-  },
-
-  addClass: (teacherId, classIdToAdd) => {
-    return Teacher.findById(teacherId)
-      .then(teacher => {
-        if (_.find(teacher.classes, classId =>
-            classId.toString() === classIdToAdd)) {
-          return teacher;
-        }
-        teacher.classes.push(classIdToAdd);
-        teacher.markModified('classes');
-        return teacher.save();
-      });
-  },
-
-  removeClass: (teacherId, classIdToRemove) => {
-    if (!teacherId) {
-      return Promise.reject();
-    }
-    return Teacher.findById(teacherId)
-      .then(teacher => {
-        _.remove(teacher.classes, classId => classId.toString() === classIdToRemove);
-        teacher.markModified('classes');
-        return teacher.save();
-      });
+      .then(formatTeacher);
   }
 };
 

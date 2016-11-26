@@ -1,11 +1,7 @@
 
-var mongoose = require('mongoose');
-
 var Class = require('../models/class');
 var ClassFormat = require('../formats/class');
 var StudentFormat = require('../formats/student');
-var Student = require('../models/student');
-var Teacher = require('../models/teacher');
 var TeacherFormat = require('../formats/teacher');
 var Response = require('../utils/response');
 
@@ -22,7 +18,11 @@ var __formatClass = aClass => {
     .then(aClass => {
       aClass = aClass.toObject();
       aClass.students = aClass.students.map(StudentFormat.toApi);
-      aClass.teacher = TeacherFormat.toApi(aClass.teacher);
+
+      if (aClass.teacher) {
+        aClass.teacher = TeacherFormat.toApi(aClass.teacher);
+      }
+
       aClass = ClassFormat.toApi(aClass);
       return aClass;
     });
@@ -61,24 +61,11 @@ var ClassService = {
   },
 
   updateTeacher: (classId, teacherId) => {
-    var oldTeacher;
-
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
-        oldTeacher = aClass.teacher;
         aClass.teacher = teacherId;
         return aClass.save();
-      })
-      .then(aClass => {
-        if (oldTeacher) {
-          return Teacher.where({ _id: teacherId })
-            .update({ $pull: { classes: mongoose.Types.ObjectId(classId) } })
-            .then(() => aClass);
-        }
-        else {
-          return aClass;
-        }
       })
       .then(__formatClass);
   },
@@ -88,7 +75,6 @@ var ClassService = {
       .then(__rejectEmptyResult)
       .then(aClass => {
         aClass.teacher = undefined;
-
         return aClass.save();
       })
       .then(__formatClass);

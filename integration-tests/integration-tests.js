@@ -34,12 +34,6 @@ before(() => {
   ]);
 });
 
-after(() => {
-  console.log('student', student);
-  console.log('teacher', teacher);
-  console.log('aClass', aClass);
-});
-
 describe('/students create and get', () => {
   var name = 'John Capybara';
 
@@ -226,6 +220,36 @@ describe('/classes update', () => {
     });
   });
 
+  describe('POST /classes/:id/remove_teacher', () => {
+    it('should return the updated class', () => {
+      return post(`/classes/${aClass.id}/remove_teacher`)
+        .then(res => {
+          aClass = res;
+
+          expect(res.teacher).to.be.undefined;
+        });
+    });
+
+    it('should update the teacher', () => {
+      return get(`/teachers/${teacher.id}`)
+        .then(res => {
+          teacher = res;
+
+          expect(res.classes).to.not.include.something
+            .that.has.property('id', aClass.id);
+        });
+    });
+
+    it('should update the class', () => {
+      return get(`/classes/${aClass.id}`)
+        .then(res => {
+          aClass = res;
+
+          expect(res.teacher).to.be.undefined;
+        });
+    });
+  });
+
   describe('POST /classes/:id/add_student', () => {
     it('should return the updated class', () => {
       return post(`/classes/${aClass.id}/add_student`, { student: student.id })
@@ -263,6 +287,38 @@ describe('/classes update', () => {
               id: student.id,
               name: student.name
             });
+        });
+    });
+  });
+
+  describe('POST /classes/:id/remove_student', () => {
+    it('should return the updated class', () => {
+      return post(`/classes/${aClass.id}/remove_student`, { student: student.id })
+        .then(res => {
+          aClass = res;
+
+          expect(res.students_enrolled).to.not.include.something
+            .that.has.property('id', student.id);
+        });
+    });
+
+    it('should update the student', () => {
+      return get(`/students/${student.id}`)
+        .then(res => {
+          student = res;
+
+          expect(res.classes).to.not.include.something
+            .that.has.property('id', aClass.id);
+        });
+    });
+
+    it('should update the class', () => {
+      return get(`/classes/${aClass.id}`)
+        .then(res => {
+          aClass = res;
+
+          expect(res.students_enrolled).to.not.include.something
+            .that.has.property('id', student.id);
         });
     });
   });

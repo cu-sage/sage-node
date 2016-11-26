@@ -11,6 +11,7 @@ var formatTeacher = teacher => {
   teacher = teacher.toObject();
 
   teacher.classes = teacher.classes.map(ClassFormat.toApi);
+  teacher = TeacherFormat.toApi(teacher);
 
   return teacher;
 };
@@ -24,7 +25,6 @@ var TeacherService = {
     return Teacher.find()
       .populate('classes', '_id name')
       .then(teachers => {
-        // console.log(teachers);
         return teachers;
       })
       .then(formatTeachers);

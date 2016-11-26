@@ -1,6 +1,10 @@
+
+var mongoose = require('mongoose');
+
 var Class = require('../models/class');
 var ClassFormat = require('../formats/class');
 var StudentFormat = require('../formats/student');
+var Student = require('../models/student');
 var Teacher = require('../models/teacher');
 var TeacherFormat = require('../formats/teacher');
 var Response = require('../utils/response');
@@ -52,23 +56,48 @@ var ClassService = {
     var aClass = new Class(properties);
 
     return aClass.save()
-      .populate('students', '_id name')
-      .populate('teacher', '_id name')
+      .then(aClass => {
+        aClass.populate('students', '_id name');
+        aClass.populate('teacher', '_id name');
+        return aClass.execPopulate();
+      })
       .then(__formatClass);
   },
 
   updateTeacher: (classId, teacherId) => {
+    var oldTeacher;
+
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
+        oldTeacher = aClass.teacher;
         aClass.teacher = teacherId;
+        return aClass.save();
+      })
+      .then(aClass => {
+        if (oldTeacher) {
+          return Teacher.where({ _id: teacherId })
+            .update({ $pull: { classes: mongoose.Types.ObjectId(classId) } })
+            .then(() => aClass);
+        }
+        else {
+          return aClass;
+        }
+      })
+      .then(aClass => {
+        return Teacher.findById(teacherId)
+          .then(teacher => {
+            teacher.classes.push(classId);
+            teacher.markModified('classes');
 
-        return aClass.save()
-          .then(aClass => {
-            aClass.populate('students', '_id name');
-            aClass.populate('teacher', '_id name');
-            return aClass.execPopulate();
+            return teacher.save()
+              .then(() => aClass);
           });
+      })
+      .then(aClass => {
+        aClass.populate('students', '_id name');
+        aClass.populate('teacher', '_id name');
+        return aClass.execPopulate();
       })
       .then(__formatClass);
   },
@@ -98,10 +127,23 @@ var ClassService = {
           return aClass;
         }
         aClass.students.push(studentIdToAdd);
-        return aClass.save();
+        return aClass.save()
+          .then(aClass => {
+            aClass.populate('students', '_id name');
+            aClass.populate('teacher', '_id name');
+            return aClass.execPopulate();
+          });
       })
-      .populate('students', '_id name')
-      .populate('teacher', '_id name')
+      .then(aClass => {
+        return Student.findById(studentIdToAdd)
+          .then(student => {
+            student.classes.push(classId);
+            student.markModified('classes');
+
+            return student.save()
+              .then(() => aClass);
+          });
+      })
       .then(__formatClass);
   },
 
@@ -113,10 +155,13 @@ var ClassService = {
           studentId.toString() === studentIdToRemove
         );
         aClass.markModified('students');
-        return aClass.save();
+        return aClass.save()
+          .then(aClass => {
+            aClass.populate('students', '_id name');
+            aClass.populate('teacher', '_id name');
+            return aClass.execPopulate();
+          });
       })
-      .populate('students', '_id name')
-      .populate('teacher', '_id name')
       .then(__formatClass);
   }
 };

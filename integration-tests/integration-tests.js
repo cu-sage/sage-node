@@ -40,7 +40,7 @@ after(() => {
   console.log('aClass', aClass);
 });
 
-describe('/students integration tests', () => {
+describe('/students create and get', () => {
   var name = 'John Capybara';
 
   describe('POST /students/new', () => {
@@ -50,6 +50,9 @@ describe('/students integration tests', () => {
           expect(ObjectId.isValid(res.id)).to.be.true;
           expect(res).to.have.property('name')
             .which.equals(name);
+          expect(res).to.have.property('classes')
+            .which.is.instanceof(Array)
+            .which.is.empty;
 
           student = res;
         });
@@ -85,21 +88,21 @@ describe('/students integration tests', () => {
   });
 });
 
-describe('/teachers integration tests', () => {
+describe('/teachers create and get', () => {
   var name = 'Valerie Frizzle';
 
   describe('POST /teachers/new', () => {
     it('should return the new teacher', () => {
       return post('/teachers/new', { name })
         .then(res => {
+          teacher = res;
+
           expect(ObjectId.isValid(res.id)).to.be.true;
           expect(res).to.have.property('name')
             .which.equals(name);
           expect(res).to.have.property('classes')
             .which.is.instanceof(Array)
             .which.is.empty;
-
-          teacher = res;
         });
     });
   });
@@ -135,7 +138,7 @@ describe('/teachers integration tests', () => {
   });
 });
 
-describe('/classes integration tests', () => {
+describe('/classes create and get', () => {
   var name = 'Magic School Bus';
 
   describe('POST /classes/new', () => {
@@ -179,23 +182,87 @@ describe('/classes integration tests', () => {
         });
     });
   });
+});
 
+describe('/classes update', () => {
   describe('POST /classes/:id/update_teacher', () => {
     it('should return the updated class', () => {
       return post(`/classes/${aClass.id}/update_teacher`, { teacher: teacher.id })
         .then(res => {
-          expect(res.teacher).to.equal(teacher.id);
-          expect(res.teacher_name).to.equal(teacher.name);
-
           aClass = res;
+
+          expect(res).to.have.property('teacher')
+            .which.deep.equals({
+              id: teacher.id,
+              name: teacher.name
+            });
         });
     });
 
     it('should update the teacher', () => {
       return get(`/teachers/${teacher.id}`)
         .then(res => {
+          teacher = res;
+
           expect(res.classes).to.include.something
-            .that.has.property('id').which.equals(aClass.id);
+            .that.deep.equals({
+              id: aClass.id,
+              name: aClass.name
+            });
+        });
+    });
+
+    it('should update the class', () => {
+      return get(`/classes/${aClass.id}`)
+        .then(res => {
+          aClass = res;
+
+          expect(res).to.have.property('teacher')
+            .which.deep.equals({
+              id: teacher.id,
+              name: teacher.name
+            });
+        });
+    });
+  });
+
+  describe('POST /classes/:id/add_student', () => {
+    it('should return the updated class', () => {
+      return post(`/classes/${aClass.id}/add_student`, { student: student.id })
+        .then(res => {
+          aClass = res;
+
+          expect(res.students_enrolled).to.include.something
+            .that.deep.equals({
+              id: student.id,
+              name: student.name
+            });
+        });
+    });
+
+    it('should update the student', () => {
+      return get(`/students/${student.id}`)
+        .then(res => {
+          student = res;
+
+          expect(res.classes).to.include.something
+            .that.deep.equals({
+              id: aClass.id,
+              name: aClass.name
+            });
+        });
+    });
+
+    it('should update the class', () => {
+      return get(`/classes/${aClass.id}`)
+        .then(res => {
+          aClass = res;
+
+          expect(res.students_enrolled).to.include.something
+            .that.deep.equals({
+              id: student.id,
+              name: student.name
+            });
         });
     });
   });

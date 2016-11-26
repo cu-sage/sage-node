@@ -1,24 +1,14 @@
 [
   {
     "_id": "582a1be95789252c48ada270",
-    "name": "Valerie Frizzle",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Valerie Frizzle"
   },
   {
     "_id": "582a1c125789252c48ada271",
-    "name": "Severus Snape",
-    "classes": [
-      "582f7c5a2dbc87700d3779de",
-      "582f81e048de86761a7fb67b"
-    ]
+    "name": "Severus Snape"
   },
   {
     "_id": "582f7e45d35339723018e6d1",
-    "name": "Remus Lupin",
-    "classes": [
-      "582f7e45d35339723018e6d2"
-    ]
+    "name": "Remus Lupin"
   }
 ]

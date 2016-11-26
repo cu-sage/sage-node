@@ -1,83 +1,46 @@
 [
   {
     "_id": "582f7c1c1489e46faecd12db",
-    "name": "Harry Potter",
-    "classes": [
-      "582f7c5a2dbc87700d3779de",
-      "582f7e45d35339723018e6d2"
-    ]
+    "name": "Harry Potter"
   },
   {
     "_id": "582f7c1c1489e46faecd12dc",
-    "name": "Hermione Grander",
-    "classes": [
-      "582f7c5a2dbc87700d3779de",
-      "582f81e048de86761a7fb67b",
-      "582f7e45d35339723018e6d2"
-    ]
+    "name": "Hermione Grander"
   },
   {
     "_id": "582f7c1c1489e46faecd12dd",
-    "name": "Ron Weasley",
-    "classes": [
-      "582f7c5a2dbc87700d3779de",
-      "582f7e45d35339723018e6d2"
-    ]
+    "name": "Ron Weasley"
   },
   {
     "_id": "582f7c1c1489e46faecd12e0",
-    "name": "Carlos Ramon",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Carlos Ramon"
   },
   {
     "_id": "582f7c1c1489e46faecd12df",
-    "name": "Arnold Perlstein",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Arnold Perlstein"
   },
   {
     "_id": "582f7c1c1489e46faecd12de",
-    "name": "Draco Malfoy",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Draco Malfoy"
   },
   {
     "_id": "582f7c1c1489e46faecd12e3",
-    "name": "Phoebe Terese",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Phoebe Terese"
   },
   {
     "_id": "582f7c1c1489e46faecd12e1",
-    "name": "Dorothy Ann",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Dorothy Ann"
   },
   {
     "_id": "582f7c1c1489e46faecd12e2",
-    "name": "Keesha Franklin",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Keesha Franklin"
   },
   {
     "_id": "582f7c1c1489e46faecd12e4",
-    "name": "Ralphie Tennelli",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Ralphie Tennelli"
   },
   {
     "_id": "582f7c1c1489e46faecd12e5",
-    "name": "Wanda Li",
-    "classes": [
-      "582f7c5a2dbc87700d3779df"
-    ]
+    "name": "Wanda Li"
   }
 ]

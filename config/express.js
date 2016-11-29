@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var compress = require('compression');
+var cors = require('cors');
 var methodOverride = require('method-override');
 
 module.exports = function(app, config) {
@@ -22,8 +23,10 @@ module.exports = function(app, config) {
   app.use(bodyParser.urlencoded({
     extended: true
   }));
+  app.use(bodyParser.text());
   app.use(cookieParser());
   app.use(compress());
+  app.use(cors());
   app.use(express.static(config.root + '/public'));
   app.use(methodOverride());
 
@@ -40,6 +43,7 @@ module.exports = function(app, config) {
 
   if(app.get('env') === 'development'){
     app.use(function (err, req, res, next) {
+      console.log(err);
       res.status(err.status || 500);
       err = { error: err };
       res.json(err);

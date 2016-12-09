@@ -1,4 +1,6 @@
 
+var format = require('../utils/format');
+
 var databaseToApiMap = {
   _id: 'id',
   xml: 'xml',
@@ -9,24 +11,6 @@ var databaseToApiMap = {
   pointsTotal: 'points_total'
 };
 
-var apiToDatabaseMap = _.invert(databaseToApiMap);
-
-var AssignmentFormat = {
-  toApi: object => {
-    object = _.pickBy(object, (value, key) =>
-      _.includes(_.keys(databaseToApiMap), key));
-
-    return _.mapKeys(object, (value, key) =>
-      databaseToApiMap[key]);
-  },
-
-  fromApi: object => {
-    object = _.pickBy(object, (value, key) =>
-      _.includes(_.keys(apiToDatabaseMap), key));
-
-    return _.mapKeys(object, (value, key) =>
-      apiToDatabaseMap[key]);
-  }
-};
+var AssignmentFormat = format(databaseToApiMap);
 
 module.exports = AssignmentFormat;

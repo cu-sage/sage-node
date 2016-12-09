@@ -1,4 +1,6 @@
 
+var format = require('../utils/format');
+
 var databaseToApiMap = {
   _id: 'id',
   name: 'name',
@@ -8,24 +10,6 @@ var databaseToApiMap = {
   leaderboard: 'leadership_board'
 };
 
-var apiToDatabaseMap = _.invert(databaseToApiMap);
-
-var ClassFormat = {
-  toApi: object => {
-    object = _.pickBy(object, (value, key) =>
-      _.includes(_.keys(databaseToApiMap), key));
-
-    return _.mapKeys(object, (value, key) =>
-      databaseToApiMap[key]);
-  },
-
-  fromApi: object => {
-    object = _.pickBy(object, (value, key) =>
-      _.includes(_.keys(apiToDatabaseMap), key));
-
-    return _.mapKeys(object, (value, key) =>
-      apiToDatabaseMap[key]);
-  }
-};
+var ClassFormat = format(databaseToApiMap);
 
 module.exports = ClassFormat;

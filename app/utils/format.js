@@ -11,6 +11,9 @@ var mapKeys = function(map, object) {
 var Formatter = function(databaseToApiMap) {
   this.databaseToApiMap = databaseToApiMap;
   this.apiToDatabaseMap = _.invert(databaseToApiMap);
+
+  this.toApi = this.toApi.bind(this);
+  this.fromApi = this.fromApi.bind(this);
 };
 
 Formatter.prototype.toApi = function(object) {

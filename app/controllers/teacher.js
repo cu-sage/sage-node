@@ -1,4 +1,4 @@
-var Class = require('../models/class');
+var ClassService = require('../services/class');
 var ClassFormat = require('../formats/class');
 var TeacherService = require('../services/teacher');
 var TeacherFormat = require('../formats/teacher');
@@ -8,8 +8,7 @@ var router = require('express').Router();
 var __formatTeacher = teacher => {
   teacher = teacher.toObject();
 
-  return Class.find({ teacher: teacher._id }, '_id name')
-    .lean()
+  return ClassService.findByTeacher(teacher._id, '_id name')
     .then(classes => {
       teacher.classes = ClassFormat.toApi(classes);
       teacher = TeacherFormat.toApi(teacher);

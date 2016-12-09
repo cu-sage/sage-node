@@ -1,5 +1,5 @@
 
-var Class = require('../models/class');
+var ClassService = require('../services/class');
 var ClassFormat = require('../formats/class');
 var StudentService = require('../services/student');
 var StudentFormat = require('../formats/student');
@@ -9,12 +9,9 @@ var router = require('express').Router();
 var __formatStudent = (student) => {
   student = student.toObject();
 
-  return Class.find({ students: student._id }, '_id name')
-    .lean()
+  return ClassService.findByStudent(student._id, '_id name')
     .then(classes => {
-      classes = classes.map(ClassFormat.toApi);
-
-      student.classes = classes;
+      student.classes = ClassFormat.toApi(classes);
       student = StudentFormat.toApi(student);
 
       return student;

@@ -5,14 +5,16 @@ let ObjectId = Schema.Types.ObjectId;
 
 var AssignmentSchema = new Schema({
   quest: {
-    type: ObjectId
+    type: ObjectId,
+    ref: 'Quest'
   },
   questSort: {
     type: Number
   },
   teacher: {
     type: ObjectId,
-    ref: 'Teacher'
+    ref: 'Teacher',
+    required: true
   },
   xml: {
     type: String,

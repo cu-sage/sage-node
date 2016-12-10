@@ -1,105 +1,77 @@
 
 var Assignment = require('../models/assignment');
-var AssignmentFormat = require('../formats/assignment');
 var Response = require('../utils/response');
-var TeacherFormat = require('../formats/teacher');
 
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var __rejectEmptyResult = assignment =>
   assignment ? assignment : Promise.reject(Response[404]('assignment not found'));
 
-var __formatAssignment = (assignment) => {
-  return assignment.populate('teacher', '_id name')
-    .execPopulate()
-    .then(assignment => {
-      assignment = assignment.toObject();
-
-      if (assignment.teacher) {
-        assignment.teacher = TeacherFormat.toApi(assignment.teacher);
-      }
-
-      assignment = AssignmentFormat.toApi(assignment);
-      return assignment;
-    });
-};
-
-var __formatAssignments = (assignments) => {
-  return Promise.all(assignments.map(__formatAssignment));
-};
-
 var AssignmentService = function() {};
 
 AssignmentService.prototype.findAll = () => {
-  return Assignment.find()
-    .then(__formatAssignments);
+  return Assignment.find();
 };
 
 AssignmentService.prototype.findByTeacher = (teacherId) => {
-  return Assignment.find({ teacher: teacherId })
-    .then(__formatAssignments);
+  return Assignment.find({ teacher: teacherId });
 };
 
-AssignmentService.prototype.findById = id => {
-  if (!ObjectId.isValid(id)) {
-    return Promise.reject(Response[400]('Invalid id'));
+AssignmentService.prototype.findById = assignmentId => {
+  if (!ObjectId.isValid(assignmentId)) {
+    return __rejectEmptyResult();
   }
 
-  return Assignment.findById(id)
-    .then(__rejectEmptyResult)
-    .then(__formatAssignment);
+  return Assignment.findById(assignmentId)
+    .then(__rejectEmptyResult);
+};
+
+AssignmentService.prototype.findByQuest = questId => {
+  if (!ObjectId.isValid(questId)) {
+    return __rejectEmptyResult();
+  }
+
+  return Assignment.find({ quest: questId })
+    .then(__rejectEmptyResult);
 };
 
 AssignmentService.prototype.create = (properties) => {
-  properties = AssignmentFormat.fromApi(properties);
   var assignment = new Assignment(properties);
 
-  return assignment.save()
-    .then(__formatAssignment);
+  return assignment.save();
 };
 
-AssignmentService.prototype.updateTeacher = (assignmentId, teacherId) => {
+AssignmentService.prototype.updateXml = (assignmentId, properties) => {
   return Assignment.findById(assignmentId)
     .then(__rejectEmptyResult)
     .then(assignment => {
-      assignment.teacher = teacherId;
+      if (properties.xml) {
+        assignment.xml = properties.xml;
+      }
+      if (properties.pointsTotal) {
+        assignment.pointsTotal = properties.pointsTotal;
+      }
+
       return assignment.save();
-    })
-    .then(__formatAssignment);
+    });
 };
 
-AssignmentService.prototype.updateXml = (assignmentId, xml, pointTotal) => {
+AssignmentService.prototype.updateQuest = (assignmentId, properties) => {
   return Assignment.findById(assignmentId)
     .then(__rejectEmptyResult)
     .then(assignment => {
-      assignment.xml = xml;
-
-      if (pointTotal) {
-        assignment.pointTotal = pointTotal;
+      if (properties.quest) {
+        assignment.quest = properties.quest;
+      }
+      if (properties.questSort) {
+        assignment.questSort = properties.questSort;
+      }
+      if (properties.pointsUnlock) {
+        assignment.pointsUnlock = properties.pointsUnlock;
       }
 
       return assignment.save();
-    })
-    .then(__formatAssignment);
-};
-
-AssignmentService.prototype.updateQuest = (assignmentId, questId, questSort, pointUnlock) => {
-  return Assignment.findById(assignmentId)
-    .then(__rejectEmptyResult)
-    .then(assignment => {
-      if (questId) {
-        assignment.questId = questId;
-      }
-      if (questSort) {
-        assignment.questSort = questSort;
-      }
-      if (pointUnlock) {
-        assignment.pointUnlock = pointUnlock;
-      }
-
-      return assignment.save();
-    })
-    .then(__formatAssignment);
+    });
 };
 
 module.exports = new AssignmentService();

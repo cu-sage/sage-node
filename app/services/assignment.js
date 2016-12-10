@@ -31,8 +31,7 @@ AssignmentService.prototype.findByQuest = questId => {
     return __rejectEmptyResult();
   }
 
-  return Assignment.find({ quest: questId })
-    .then(__rejectEmptyResult);
+  return Assignment.find({ quest: questId });
 };
 
 AssignmentService.prototype.create = (properties) => {

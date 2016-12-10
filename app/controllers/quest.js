@@ -12,8 +12,8 @@ var __formatQuest = (quest) => {
       var assignments = results[0];
       var quest = results[1].toObject();
 
-      assignments = assignments.map(assignment => assignment._id);
-      quest.assignments = TeacherFormat.toApi(assignments);
+      quest.assignments = assignments.map(assignment => assignment._id);
+      quest.teacher = TeacherFormat.toApi(quest.teacher);
 
       quest = QuestFormat.toApi(quest);
       return quest;

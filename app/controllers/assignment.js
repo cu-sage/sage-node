@@ -72,7 +72,7 @@ AssignmentController.updateQuest = (req, res, next) => {
   var assignmentId = req.params.id;
   var properties = AssignmentFormat.fromApi((req.body));
 
-  return AssignmentService.updateTeacher(assignmentId, properties)
+  return AssignmentService.updateQuest(assignmentId, properties)
     .then(__formatAssignment)
     .then(assignment => res.json(assignment))
     .catch(err => next(err));

@@ -53,11 +53,7 @@ var ClassService = {
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
-        if (_.find(aClass.students, studentId =>
-            studentId.toString() === studentIdToAdd)) {
-          return aClass;
-        }
-        aClass.students.push(studentIdToAdd);
+        aClass.students.addToSet(studentIdToAdd);
         return aClass.save();
       });
   },
@@ -66,10 +62,7 @@ var ClassService = {
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
-        _.remove(aClass.students, studentId =>
-          studentId.toString() === studentIdToRemove
-        );
-        aClass.markModified('students');
+        aClass.students.pull(studentIdToRemove);
         return aClass.save();
       });
   }

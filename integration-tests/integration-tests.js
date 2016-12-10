@@ -8,6 +8,8 @@ var host = 'http://localhost:8082';
 var student;
 var teacher;
 var aClass;
+var quest;
+var assignment;
 
 var get = (endpoint) => {
   return request({
@@ -28,13 +30,15 @@ var post = (endpoint, body) => {
 
 before(() => {
   return Promise.all([
-    mongoose.model('Student').remove({}).exec(),
-    mongoose.model('Teacher').remove({}).exec(),
-    mongoose.model('Class').remove({}).exec()
+    mongoose.model('Student').remove({}),
+    mongoose.model('Teacher').remove({}),
+    mongoose.model('Class').remove({}),
+    mongoose.model('Assignment').remove({}),
+    mongoose.model('Quest').remove({})
   ]);
 });
 
-describe('/students create and get', () => {
+describe('/students endpoints', () => {
   var name = 'John Capybara';
 
   describe('POST /students/new', () => {
@@ -82,7 +86,7 @@ describe('/students create and get', () => {
   });
 });
 
-describe('/teachers create and get', () => {
+describe('/teachers endpoints', () => {
   var name = 'Valerie Frizzle';
 
   describe('POST /teachers/new', () => {
@@ -132,7 +136,7 @@ describe('/teachers create and get', () => {
   });
 });
 
-describe('/classes create and get', () => {
+describe('/classes endpoints', () => {
   var name = 'Magic School Bus';
 
   describe('POST /classes/new', () => {
@@ -176,9 +180,7 @@ describe('/classes create and get', () => {
         });
     });
   });
-});
 
-describe('/classes update', () => {
   describe('POST /classes/:id/update_teacher', () => {
     it('should return the updated class', () => {
       return post(`/classes/${aClass.id}/update_teacher`, { teacher: teacher.id })
@@ -205,19 +207,6 @@ describe('/classes update', () => {
             });
         });
     });
-
-    it('should update the class', () => {
-      return get(`/classes/${aClass.id}`)
-        .then(res => {
-          aClass = res;
-
-          expect(res).to.have.property('teacher')
-            .which.deep.equals({
-              id: teacher.id,
-              name: teacher.name
-            });
-        });
-    });
   });
 
   describe('POST /classes/:id/remove_teacher', () => {
@@ -237,15 +226,6 @@ describe('/classes update', () => {
 
           expect(res.classes).to.not.include.something
             .that.has.property('id', aClass.id);
-        });
-    });
-
-    it('should update the class', () => {
-      return get(`/classes/${aClass.id}`)
-        .then(res => {
-          aClass = res;
-
-          expect(res.teacher).to.be.undefined;
         });
     });
   });
@@ -276,19 +256,6 @@ describe('/classes update', () => {
             });
         });
     });
-
-    it('should update the class', () => {
-      return get(`/classes/${aClass.id}`)
-        .then(res => {
-          aClass = res;
-
-          expect(res.students_enrolled).to.include.something
-            .that.deep.equals({
-              id: student.id,
-              name: student.name
-            });
-        });
-    });
   });
 
   describe('POST /classes/:id/remove_student', () => {
@@ -311,14 +278,161 @@ describe('/classes update', () => {
             .that.has.property('id', aClass.id);
         });
     });
+  });
+});
 
-    it('should update the class', () => {
-      return get(`/classes/${aClass.id}`)
+describe('/quests endpoints', () => {
+  describe('POST /quests/new', () => {
+    it('should return the new quest', () => {
+      return post('/quests/new', { teacher: teacher.id })
         .then(res => {
-          aClass = res;
+          expect(ObjectId.isValid(res.id)).to.be.true;
+          expect(res).to.have.property('teacher')
+            .which.deep.equals({
+              id: teacher.id,
+              name: teacher.name
+            });
 
-          expect(res.students_enrolled).to.not.include.something
-            .that.has.property('id', student.id);
+          quest = res;
+        });
+    });
+  });
+
+  describe('GET /quests/:id', () => {
+    it('should return a quest', () => {
+      return get(`/quests/${quest.id}`)
+        .then(res => {
+          expect(res).deep.equals(quest);
+        });
+    });
+  });
+
+  describe('GET /quests/list', () => {
+    it('should return a list of quests', () => {
+      return get('/quests/list')
+        .then(res => {
+          expect(res).to.all.have.property('id');
+          expect(res).to.all.have.property('teacher');
+        });
+    });
+  });
+});
+
+describe('/assignments endpoints', () => {
+  var xml = '<xml>Some test xml</xml>';
+  var points_total = 14;
+  var quest_sort = 18;
+  var points_unlock = 22;
+
+  describe('POST /assignments/new', () => {
+    it('should return the new assignment', () => {
+      return post('/assignments/new', {
+        xml,
+        quest_id: quest.id,
+        quest_sort,
+        teacher: teacher.id,
+        points_total,
+        points_unlock
+      })
+        .then(res => {
+          assignment = res;
+
+          expect(ObjectId.isValid(res.id)).to.be.true;
+          expect(res).to.have.property('quest_id')
+            .which.equals(quest.id);
+          expect(res).to.have.property('quest_sort')
+            .which.equals(quest_sort);
+          expect(res).to.have.property('teacher')
+            .which.deep.equals({
+              id: teacher.id,
+              name: teacher.name
+            });
+          expect(res).to.have.property('points_total')
+            .which.equals(points_total);
+          expect(res).to.have.property('points_unlock')
+            .which.equals(points_unlock);
+        });
+    });
+  });
+
+  describe('GET /assignments/:id', () => {
+    it('should return a assignment', () => {
+      return get(`/assignments/${assignment.id}`)
+        .then(res => {
+          expect(res).deep.equals(assignment);
+        });
+    });
+  });
+
+  describe('GET /assignments/list', () => {
+    it('should return a list of assignments', () => {
+      return get('/assignments/list')
+        .then(res => {
+          expect(res).to.all.have.property('id');
+          expect(res).to.all.have.property('teacher');
+          expect(res).to.all.have.property('quest_id');
+          expect(res).to.all.have.property('quest_sort');
+          expect(res).to.all.have.property('points_unlock');
+          expect(res).to.all.have.property('points_total');
+        });
+    });
+  });
+
+  describe('POST /assignments/:id/update_xml', () => {
+    it('should return the updated assignment', () => {
+      xml = '<xml>Some updated test xml</xml>';
+      points_total += 10;
+
+      return post(`/assignments/${assignment.id}/update_xml`, {
+        xml,
+        points_total
+      })
+        .then(res => {
+          assignment = res;
+
+          expect(res).to.have.property('xml')
+            .which.equals(xml);
+          expect(res).to.have.property('points_total')
+            .which.equals(points_total);
+        });
+    });
+  });
+
+  describe('POST /assignments/:id/update_quest', () => {
+    before(() => {
+      quest_sort += 2;
+      points_unlock += 10;
+
+      return post('/quests/new', {
+        teacher: teacher.id
+      })
+        .then(newQuest => {
+          quest = newQuest;
+        });
+
+    });
+
+    it('should return the updated assignment', () => {
+      return post(`/assignments/${assignment.id}/update_quest`, {
+        quest_id: quest.id,
+        quest_sort,
+        points_unlock
+      })
+        .then(res => {
+          assignment = res;
+
+          expect(res.xml).to.equal(xml);
+          expect(res.points_total).to.equal(points_total);
+        });
+    });
+
+    it('should update the quest', () => {
+      return get(`/quests/${quest.id}`)
+        .then(res => {
+          quest = res;
+
+          expect(res.assignments).to.include.something
+            .which.equals(assignment.id);
         });
     });
   });

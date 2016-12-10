@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
@@ -12,6 +13,8 @@ var StudentSchema = new Schema({
     trim: true
   }
 });
+
+StudentSchema.plugin(idValidator);
 
 var Student = mongoose.model('Student', StudentSchema);
 

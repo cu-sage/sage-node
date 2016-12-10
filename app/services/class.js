@@ -1,8 +1,5 @@
 
 var Class = require('../models/class');
-var ClassFormat = require('../formats/class');
-var StudentFormat = require('../formats/student');
-var TeacherFormat = require('../formats/teacher');
 var Response = require('../utils/response');
 
 // 'class' is a reserved word, so use aClass instead
@@ -10,54 +7,28 @@ var Response = require('../utils/response');
 var __rejectEmptyResult = aClass =>
   aClass ? aClass : Promise.reject(Response[404]('class not found'));
 
-var __formatClass = aClass => {
-  return aClass
-    .populate('students', '_id name')
-    .populate('teacher', '_id name')
-    .execPopulate()
-    .then(aClass => {
-      aClass = aClass.toObject();
-      aClass.students = aClass.students.map(StudentFormat.toApi);
-
-      if (aClass.teacher) {
-        aClass.teacher = TeacherFormat.toApi(aClass.teacher);
-      }
-
-      aClass = ClassFormat.toApi(aClass);
-      return aClass;
-    });
-};
-
-var __formatClasses = classes => {
-  return Promise.all(classes.map(__formatClass));
-};
-
 var ClassService = {
-  findAll: () => {
-    return Class.find()
-      .then(__formatClasses);
+  findAll: (projection) => {
+    return Class.find(projection);
   },
 
-  findById: id => {
-    return Class.findById(id)
-      .then(__rejectEmptyResult)
-      .then(__formatClass);
+  findById: (id, projection) => {
+    return Class.findById(id, projection)
+      .then(__rejectEmptyResult);
   },
 
-  findByTeacher: teacherId => {
-    return Class.find({ teacher: teacherId })
-      .then(__formatClass);
+  findByTeacher: (teacherId, projection) => {
+    return Class.find({ teacher: teacherId }, projection);
+  },
+
+  findByStudent: (studentId, projection) => {
+    return Class.find({ students: studentId }, projection);
   },
 
   create: properties => {
-    properties = ClassFormat.fromApi(properties);
     var aClass = new Class(properties);
 
-    return aClass.save()
-      .then(aClass => {
-        return aClass.execPopulate();
-      })
-      .then(__formatClass);
+    return aClass.save();
   },
 
   updateTeacher: (classId, teacherId) => {
@@ -66,8 +37,7 @@ var ClassService = {
       .then(aClass => {
         aClass.teacher = teacherId;
         return aClass.save();
-      })
-      .then(__formatClass);
+      });
   },
 
   removeTeacher: (classId) => {
@@ -76,35 +46,25 @@ var ClassService = {
       .then(aClass => {
         aClass.teacher = undefined;
         return aClass.save();
-      })
-      .then(__formatClass);
+      });
   },
 
   addStudent: (classId, studentIdToAdd) => {
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
-        if (_.find(aClass.students, studentId =>
-            studentId.toString() === studentIdToAdd)) {
-          return aClass;
-        }
-        aClass.students.push(studentIdToAdd);
+        aClass.students.addToSet(studentIdToAdd);
         return aClass.save();
-      })
-      .then(__formatClass);
+      });
   },
 
   removeStudent: (classId, studentIdToRemove) => {
     return Class.findById(classId)
       .then(__rejectEmptyResult)
       .then(aClass => {
-        _.remove(aClass.students, studentId =>
-          studentId.toString() === studentIdToRemove
-        );
-        aClass.markModified('students');
+        aClass.students.pull(studentIdToRemove);
         return aClass.save();
-      })
-      .then(__formatClass);
+      });
   }
 };
 

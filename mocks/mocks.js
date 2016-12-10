@@ -6,18 +6,17 @@ var mongoose = require('mongoose');
 var glob = require('glob');
 var config = require('../config/config');
 
-var mocks = {
-  Student: require('./data/students'),
-  Teacher: require('./data/teachers'),
-  Class: require('./data/classes')
-};
+mongoose.Promise = global.Promise;
 
-var numberOfObjectsToLoad = 0;
-var numberOfObjectsLoaded = 0;
+var mocks = [
+  { model: 'Student', data: require('./data/students.json') },
+  { model: 'Teacher', data: require('./data/teachers.json') },
+  { model: 'Class', data: require('./data/classes.json') },
+  { model: 'Assignment', data: require('./data/assignments.json') },
+  { model: 'Quest', data: require('./data/quests.json') },
+];
 
-_.forOwn(mocks, (data) => {
-  numberOfObjectsToLoad += data.length;
-});
+var docs = [];
 
 function startup() {
   mongoose.connect(config.db);
@@ -30,35 +29,52 @@ function startup() {
   models.forEach(function (model) {
     require(model);
   });
+
+  return Promise.resolve();
 }
 
 function drop() {
-  return Promise.all([
-    mongoose.model('Student').remove({}).exec(),
-    mongoose.model('Teacher').remove({}).exec(),
-    mongoose.model('Class').remove({}).exec()
-  ]);
+  return Promise.all(mocks.map(mock => {
+    return mongoose.model(mock.model).remove({});
+  }));
 }
 
 function run() {
-  _.forOwn(mocks, (data, model) => {
-    data.forEach(object => {
-      mongoose.model(model)(object).save({ validateBeforeSave: false }, (err) => {
-        if (err) {
-          console.log(`Did not insert object into ${model}s:`);
-          console.log(object);
-        }
+  return Promise.all(mocks.map(mock => {
+    return Promise.all(mock.data.map(object => {
+      var Model = mongoose.model(mock.model)
+      var doc = Model(object)
 
-        if (++numberOfObjectsLoaded == numberOfObjectsToLoad) {
-          console.log("Done loading mocks");
-          process.exit();
-        }
-      });
-    });
+      return doc.save({ validateBeforeSave: false })
+        .then(doc => {
+          docs.push(doc);
+          return doc;
+        })
+        .catch(err => {
+          console.log(`Did not insert into ${mock.model}:`, object._id);
+          return;
+        });
+    }));
+  }))
+}
+
+function validate() {
+  docs.forEach(doc => {
+    var err = doc.validateSync();
+
+    if (err) {
+      console.log('Failed to insert object with _id', doc._id);
+      console.log(err.errors);
+    }
   });
 }
 
-startup();
+function exit() {
+  return process.exit();
+}
 
-run();
-// drop().then(run);
+startup()
+  // .then(drop)
+  .then(run)
+  .then(validate)
+  .then(exit);

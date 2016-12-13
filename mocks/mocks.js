@@ -9,11 +9,12 @@ var config = require('../config/config');
 mongoose.Promise = global.Promise;
 
 var mocks = [
+  { model: 'Assessment', data: require('./data/assessments.json') },
+  { model: 'Assignment', data: require('./data/assignments.json') },
+  { model: 'Class', data: require('./data/classes.json') },
+  { model: 'Quest', data: require('./data/quests.json') },
   { model: 'Student', data: require('./data/students.json') },
   { model: 'Teacher', data: require('./data/teachers.json') },
-  { model: 'Class', data: require('./data/classes.json') },
-  { model: 'Assignment', data: require('./data/assignments.json') },
-  { model: 'Quest', data: require('./data/quests.json') },
 ];
 
 var docs = [];
@@ -77,4 +78,7 @@ startup()
   // .then(drop)
   .then(run)
   .then(validate)
-  .then(exit);
+  .then(exit)
+  .catch(err => {
+    console.log(err);
+  });

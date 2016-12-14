@@ -1,9 +1,11 @@
 
 var AssessmentFormat = require('../formats/assessment');
 var AssessmentService = require('../services/assessment');
+var ClassService = require('../services/class');
 var fs = require('fs');
 var hairball = require('../utils/hairball');
 var Response = require('../utils/response');
+var StudentService = require('../services/student');
 var tmp = require('tmp');
 
 var router = require('express').Router();
@@ -44,7 +46,7 @@ AssessmentController.update = (req, res, next) => {
   var assignment = req.body.assignment;
   var project = JSON.stringify(req.body.project);
   var sb2 = Buffer.from(req.body.sb2, 'base64');
-  var student = req.body.student;
+  var studentId = req.body.student;
   var tmpFile;
 
   // Save project data to a temporary file
@@ -60,7 +62,7 @@ AssessmentController.update = (req, res, next) => {
   return hairball(tmpFile.name)
     .then(results => {
       var properties = {
-        student,
+        student: studentId,
         assignment,
         project,
         abstraction: results['Abstraction'],
@@ -75,9 +77,37 @@ AssessmentController.update = (req, res, next) => {
       return properties;
     })
     .then(AssessmentService.update)
+    .then(assessment => {
+      var score = assessment.mastery;
+      var oldHighscore;
+      var newHighscore;
+      var studentAlias;
+
+      return StudentService.findById(studentId)
+        .then(student => {
+          oldHighscore = student.highscore;
+          return student;
+        })
+        .then(() => StudentService.addScore(studentId, score))
+        .then(student => {
+          studentAlias = student.alias;
+          newHighscore = student.highscore;
+
+          if (newHighscore >= oldHighscore) {
+            return ClassService.findByStudent(student._id)
+              // Update leaderboards of classes the student is in
+              .then(classes => Promise.all(classes.map(
+                aClass => ClassService.updateLeaderboard(aClass._id, studentAlias, newHighscore)
+              )))
+              .then(() => assessment);
+          }
+
+          return assessment;
+        });
+    })
     .then(__formatAssessment)
     .then(assessment => res.json(assessment))
-    .catch(() => next(Response[500]()));
+    .catch(next);
 };
 
 module.exports = AssessmentController;

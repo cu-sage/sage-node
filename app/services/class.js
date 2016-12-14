@@ -65,6 +65,21 @@ var ClassService = {
         aClass.students.pull(studentIdToRemove);
         return aClass.save();
       });
+  },
+
+  updateLeaderboard: (classId, studentAlias, score) => {
+    return Class.findById(classId)
+      .then(aClass => {
+        var row = _.find(aClass.leaderboard, { studentAlias });
+        if (row) {
+          row.score = score;
+        }
+        else {
+          aClass.leaderboard.push({ studentAlias, score });
+        }
+        aClass.markModified('leaderboard');
+        return aClass.save();
+      });
   }
 };
 

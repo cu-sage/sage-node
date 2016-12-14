@@ -1,46 +1,57 @@
 [
   {
     "_id": "582f7c1c1489e46faecd12db",
-    "name": "Harry Potter"
+    "name": "Harry Potter",
+    "alias": "Orchidchin Tooth"
   },
   {
     "_id": "582f7c1c1489e46faecd12dc",
-    "name": "Hermione Granger"
+    "name": "Hermione Granger",
+    "alias": "Foilface Walker"
   },
   {
     "_id": "582f7c1c1489e46faecd12dd",
-    "name": "Ron Weasley"
+    "name": "Ron Weasley",
+    "alias": "Gemraccoon Rider"
   },
   {
     "_id": "582f7c1c1489e46faecd12e0",
-    "name": "Carlos Ramon"
+    "name": "Carlos Ramon",
+    "alias": "Deephand Painter"
   },
   {
     "_id": "582f7c1c1489e46faecd12df",
-    "name": "Arnold Perlstein"
+    "name": "Arnold Perlstein",
+    "alias": "Oilleg Lynx"
   },
   {
     "_id": "582f7c1c1489e46faecd12de",
-    "name": "Draco Malfoy"
+    "name": "Draco Malfoy",
+    "alias": "Orchidpaw Elf"
   },
   {
     "_id": "582f7c1c1489e46faecd12e3",
-    "name": "Phoebe Terese"
+    "name": "Phoebe Terese",
+    "alias": "Squareroach Kangaroo"
   },
   {
     "_id": "582f7c1c1489e46faecd12e1",
-    "name": "Dorothy Ann"
+    "name": "Dorothy Ann",
+    "alias": "Notchhornet Legs"
   },
   {
     "_id": "582f7c1c1489e46faecd12e2",
-    "name": "Keesha Franklin"
+    "name": "Keesha Franklin",
+    "alias": "Glowfin Seeker"
   },
   {
     "_id": "582f7c1c1489e46faecd12e4",
-    "name": "Ralphie Tennelli"
+    "name": "Ralphie Tennelli",
+    "alias": "Ebonyheron Spirit"
   },
   {
     "_id": "582f7c1c1489e46faecd12e5",
-    "name": "Wanda Li"
+    "name": "Wanda Li",
+    "alias": "Leadvenom Gull"
   }
 ]

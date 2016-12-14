@@ -1,15 +1,14 @@
 
 var AssessmentFormat = require('../formats/assessment');
 var AssessmentService = require('../services/assessment');
-var config = require('../../config/config');
-var exec = require('child_process').exec;
 var fs = require('fs');
+var hairball = require('../utils/hairball');
 var Response = require('../utils/response');
+var tmp = require('tmp');
 
 var router = require('express').Router();
 
 function __formatAssessment(assessment) {
-  console.log(assessment.mastery);
   assessment = AssessmentFormat.toApi(assessment);
   return assessment;
 }
@@ -22,7 +21,7 @@ var AssessmentController = function(app) {
   router.get('/list', AssessmentController.findAll);
   router.get('/latest', AssessmentController.findLatest);
 
-  router.post('/save', AssessmentController.save);
+  router.post('/update', AssessmentController.update);
 
   app.use('/assessments', router);
 };
@@ -41,24 +40,25 @@ AssessmentController.findLatest = (req, res, next) => {
     .catch(next);
 };
 
-AssessmentController.save = (req, res, next) => {
+AssessmentController.update = (req, res, next) => {
   var assignment = req.body.assignment;
   var project = JSON.stringify(req.body.project);
   var sb2 = Buffer.from(req.body.sb2, 'base64');
   var student = req.body.student;
+  var tmpFile;
 
-  fs.writeFile(config.root + '/project.sb2', sb2, 'binary', function(err) {
-    if (err) {
-      return next(Promise.reject(Response[500]()));
-    }
+  // Save project data to a temporary file
+  try {
+    tmpFile = tmp.fileSync({ postfix: '.sb2' });
+    fs.appendFileSync(tmpFile.fd, sb2);
+  }
+  catch (err) {
+    return next(Response[500]());
+  }
 
-    exec(`hairball -p mastery ${config.root}/project.sb2`, (error, stdout) => {
-      if (error) {
-        return next(Response[500]());
-      }
-
-      var results = JSON.parse(stdout.split('\n')[1].replace(/'/g, '"'));
-
+  // Analyze the project and save the results
+  return hairball(tmpFile.name)
+    .then(results => {
       var properties = {
         student,
         assignment,
@@ -72,9 +72,12 @@ AssessmentController.save = (req, res, next) => {
         dataRepresentation: results['DataRepresentation']
       };
 
-      AssessmentService.save(properties);
-    });
-  });
+      return properties;
+    })
+    .then(AssessmentService.update)
+    .then(__formatAssessment)
+    .then(assessment => res.json(assessment))
+    .catch(() => next(Response[500]()));
 };
 
 module.exports = AssessmentController;

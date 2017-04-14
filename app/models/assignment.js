@@ -4,28 +4,20 @@ let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
 var AssignmentSchema = new Schema({
-  quest: {
+  assignmentID: {
     type: ObjectId,
-    ref: 'Quest'
-  },
-  questSort: {
-    type: Number
-  },
-  teacher: {
-    type: ObjectId,
-    ref: 'Teacher',
     required: true
   },
-  xml: {
-    type: String,
+  instructorID : {
+    type : ObjectId,
     required: true
   },
-  pointsTotal: {
-    type: Number,
+  sb2FileLocation : {
+    type : String,
     required: true
   },
-  pointsUnlock: {
-    type: Number
+  assessmentXML : {
+    type : String
   }
 });
 

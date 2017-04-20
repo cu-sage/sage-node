@@ -8,9 +8,13 @@ var Response = require('./response');
  */
 module.exports = function hairball(projectFile) {
   try {
-    var stdout = execSync(`hairball -p mastery ${projectFile}`).toString();
-    var results = JSON.parse(stdout.split('\n')[1].replace(/'/g, '"'));
-    return Promise.resolve(results);
+	let initialAbsolute = process.cwd();
+    var stdout = execSync(`hairball -p mastery ${initialAbsolute}/${projectFile}`).toString();
+    let results = stdout.split('\n')[1];
+    results = results.replace('/','');
+	results = results.replace(/\'/g, '\"');
+
+    return Promise.resolve(JSON.parse(results));
   }
   catch (error) {
     return Promise.reject(Response[500]());

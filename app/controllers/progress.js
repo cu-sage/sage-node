@@ -1,6 +1,6 @@
 var router = require('express').Router();
 var ProgressService = require ('../services/progress.js');
-
+var hairball = require ('../utils/hairball.js');
 var multer  = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -52,9 +52,12 @@ ProgressController.submitAssignment = (req, res, next) => {
 		lastUpdatedsb2FileLocation : req.file.path
 	};
 
-	//TODO- add logic for points calculation.
+	hairball (req.file.path)
+	.then((results) => {
+		properties.results = results;
+		return ProgressService.submitAssignment(properties);
 
-	ProgressService.submitAssignment(properties)
+	})
 	.then((progress) => res.send(progress))
 	.catch((err) => next(err));
 

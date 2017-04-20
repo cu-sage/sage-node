@@ -70,15 +70,15 @@ Progress.prototype.addNewJSON = function (properties)  {
 
 Progress.prototype.submitAssignment = function (properties) {
 	
-	let {studentID, assignmentID, lastUpdatedsb2FileLocation} = properties;
+	let {studentID, assignmentID, lastUpdatedsb2FileLocation, results} = properties;
 
 	return ProgressModel.findOneAndUpdate(
 		{studentID, assignmentID}, 
 		{
-			$set : {lastUpdatedsb2FileLocation}
+			$set : {lastUpdatedsb2FileLocation, results}
 		}
 	).then ((progress) => {
-		return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
+		return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation, results});
 	})
 	.catch ((err) => {
 		return Promise.reject (err);

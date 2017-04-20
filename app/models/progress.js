@@ -13,7 +13,8 @@ var ProgressSchema = new Schema({
   lastUpdatedsb2FileLocation : {
     type : String
   },
-  progressJSON : []
+  progressJSON : [],
+  'results' : [],
 }, {
   toObject: {
     virtuals: true

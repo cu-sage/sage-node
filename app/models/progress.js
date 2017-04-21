@@ -14,7 +14,7 @@ var ProgressSchema = new Schema({
     type : String
   },
   progressJSON : [],
-  'results' : [],
+  'results' : {},
 }, {
   toObject: {
     virtuals: true
@@ -23,8 +23,6 @@ var ProgressSchema = new Schema({
     virtuals: true
   }
 });
-
-//AssessmentSchema.plugin(idValidator);
 
 var Progress = mongoose.model('Progress', ProgressSchema);
 

@@ -8,6 +8,13 @@ function Progress () {
 
 }
 
+let prepareSearchQueryForSearchingStudentsProgresses = function (studentID, assignmentIDs = []) {
+	let searchObject = {};
+	(assignmentIDs.length) ? searchObject.assignmentID = {$in: assignmentIDs} : null;
+	(studentID) ? searchObject.studentID = studentID : null;
+	return searchObject;
+
+};
 
 Progress.prototype.create = function  (properties) {
 
@@ -83,6 +90,11 @@ Progress.prototype.submitAssignment = function (properties) {
 	.catch ((err) => {
 		return Promise.reject (err);
 	});
+};
+
+Progress.prototype.fetchStudentProgresses = function (studentID, assignmentIDs = []) {
+	let searchQuery = prepareSearchQueryForSearchingStudentsProgresses(studentID, assignmentIDs);
+	return ProgressModel.find(searchQuery);
 };
 
 module.exports = new Progress();

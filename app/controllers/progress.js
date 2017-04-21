@@ -19,15 +19,24 @@ var upload = multer({ storage: storage });
 var ProgressController = function(app) {
 
   router.get('/student/:studentID/assignment/:assignmentID', ProgressController.fetchAssignmentProgress);
+  router.get('/student/:studentID', ProgressController.fetchStudentAllProgress);
   router.put('/student/:studentID/assignment/:assignmentID/updateJSON', ProgressController.updateJSON);
   router.post('/student/:studentID/assignment/:assignmentID', upload.single('sb2File'), ProgressController.submitAssignment);
   app.use('/progress', router);
 };
 
 
+ProgressController.fetchStudentAllProgress = (req, res, next) => {
+	let {studentID} = req.params;
+	let {assignmentIDs} = req.query;
+	assignmentIDs = (assignmentIDs) ? assignmentIDs.split(',') : [];
+	ProgressService.fetchStudentProgresses(studentID, assignmentIDs)
+	.then((progresses) => res.send(progresses))
+	.catch((err) => next(err));
+
+};
 ProgressController.fetchAssignmentProgress = (req, res, next) => {
 	let {studentID, assignmentID} = req.params;
-
 	ProgressService.fetch({assignmentID,studentID})
 	.then((progress)=>res.send(progress))
 	.catch((err) => next(err));

@@ -22,9 +22,20 @@ var ProgressController = function(app) {
   router.get('/student/:studentID', ProgressController.fetchStudentAllProgress);
   router.put('/student/:studentID/assignment/:assignmentID/updateJSON', ProgressController.updateJSON);
   router.post('/student/:studentID/assignment/:assignmentID', upload.single('sb2File'), ProgressController.submitAssignment);
+  router.get('/assignment/:assignmentID', ProgressController.fetchProgressesOfAParticularAssignment);
   app.use('/progress', router);
 };
 
+
+ProgressController.fetchProgressesOfAParticularAssignment = (req, res, next) => {
+	let {assignmentID} = req.params;
+	let {studentIDs} = req.query;
+	studentIDs = (studentIDs) ? studentIDs.split(',') : [];
+
+	ProgressService.fetchProgressesObjectsAccordingToAssignment(assignmentID, studentIDs)
+	.then((progresses) => res.send(progresses))
+	.catch ((err) => next (err));
+};
 
 ProgressController.fetchStudentAllProgress = (req, res, next) => {
 	let {studentID} = req.params;

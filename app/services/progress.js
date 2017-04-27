@@ -16,6 +16,14 @@ let prepareSearchQueryForSearchingStudentsProgresses = function (studentID, assi
 
 };
 
+let prepareQueryForFetchProgressesObjectsAccordingToAssignment = function (assignmentID, studentIDs  = []) {
+
+	let searchObject = {};
+	searchObject.assignmentID = assignmentID;
+	(studentIDs.length) ? searchObject.studentID = {$in : studentIDs} : undefined;
+	return searchObject;
+};
+
 Progress.prototype.create = function  (properties) {
 
 	let {studentID, assignmentID} = properties;
@@ -96,5 +104,14 @@ Progress.prototype.fetchStudentProgresses = function (studentID, assignmentIDs =
 	let searchQuery = prepareSearchQueryForSearchingStudentsProgresses(studentID, assignmentIDs);
 	return ProgressModel.find(searchQuery);
 };
+
+Progress.prototype.fetchProgressesObjectsAccordingToAssignment= function (assignmentID, studentIDs) {
+
+	let searchQuery = prepareQueryForFetchProgressesObjectsAccordingToAssignment (assignmentID, studentIDs);
+
+	return ProgressModel.find(searchQuery);
+
+};
+
 
 module.exports = new Progress();

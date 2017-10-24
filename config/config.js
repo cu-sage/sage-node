@@ -9,7 +9,7 @@ var config = {
       name: 'sage-node'
     },
     port: process.env.PORT || 8081,
-    db: 'mongodb://localhost/sage-node-development'
+    db: 'mongodb://sage-node:sage-node@ds161210.mlab.com:61210/sage-node'
   },
 
   test: {

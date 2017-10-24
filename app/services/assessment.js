@@ -2,8 +2,6 @@
 var Assessment = require('../models/assessment');
 var Response = require('../utils/response');
 
-var ObjectId = require('mongoose').Types.ObjectId;
-
 var __rejectEmptyResult = assessment =>
   assessment ? assessment : Promise.reject(Response[404]('assessment not found'));
 
@@ -18,9 +16,10 @@ AssessmentService.prototype.findLatest = () => {
     .then(__rejectEmptyResult);
 };
 
-AssessmentService.prototype.save = properties => {
+AssessmentService.prototype.update = properties => {
   var student = properties.student;
   var assignment = properties.assignment;
+
   return Assessment.findOne({ student, assignment })
     .then(assessment => {
       if (!assessment) {

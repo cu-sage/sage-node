@@ -11,6 +11,13 @@ var StudentSchema = new Schema({
   avatarUrl: {
     type: String,
     trim: true
+  },
+  alias: {
+    type: String,
+    trim: true
+  },
+  highscore: {
+    type: Number
   }
 });
 

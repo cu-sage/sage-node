@@ -1,6 +1,7 @@
 
 var Student = require('../models/student');
 var Response = require('../utils/response');
+var generateSillyName = require('sillyname');
 
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -24,8 +25,20 @@ StudentService.prototype.findById = id => {
 
 StudentService.prototype.create = properties => {
   var student = new Student(properties);
+  student.alias = generateSillyName();
 
   return student.save();
+};
+
+StudentService.prototype.addScore = function(studentId, score) {
+  return Student.findById(studentId)
+    .then(student => {
+      if (!student.highscore || score > student.highscore) {
+        student.highscore = score;
+      }
+
+      return student.save();
+    });
 };
 
 module.exports = new StudentService();

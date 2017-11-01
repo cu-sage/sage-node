@@ -26,5 +26,5 @@ SpriteSchema.virtual('Log').get(function() {
 
 SpriteSchema.plugin(idValidator);
 
-var Sprite = mongoose.model('Sprite', AppSchema);
+var Sprite = mongoose.model('Sprite', SpriteSchema);
 module.exports = Sprite;

@@ -17,7 +17,7 @@ var AppSchema = new Schema({
   },
   Sprites : {
     type : String
-  }
+  },
 
   Original : {
     type : String

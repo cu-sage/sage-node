@@ -8,6 +8,10 @@ var app = require('../app');
 
 mongoose.connect(config.db);
 var db = mongoose.connection;
+
+db.once('open', function(){
+  console.log('Connected to ' + config.db);
+});
 db.on('error', function () {
   throw new Error('unable to connect to database at ' + config.db);
 });

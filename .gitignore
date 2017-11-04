@@ -1,4 +1,7 @@
 node_modules/
+data/db
+uploads
+.idea
 public/components
 .nyc_output
 .sass-cache
@@ -13,3 +16,5 @@ data/db/storage.bson
 data/db/WiredTiger
 data/db/WiredTiger.turtle
 data/db/diagnostic.data/metrics.2017-10-26T23-15-28Z-00000
+.idea/modules.xml
+

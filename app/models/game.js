@@ -11,7 +11,7 @@ var GameSchema = new Schema({
     type : String
   },
   progressJSON : [],
-  'results' : {},
+//  'results' : {},
 }, {
   toObject: {
     virtuals: true

@@ -6,27 +6,26 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 function Games () {
 }
-
 Games.prototype.fetchGame= function (gameIDs) {
 	return gameIDs;
 };
 
-module.exports = new Games();
-
-
 Games.prototype.submitGame = function (properties) {
 
-  let {gameID, lastUpdatedsb2FileLocation, results} = properties;
+  let {gameID, lastUpdatedsb2FileLocation} = properties;
+  console.log("Processing assessment on Game :"+ gameID + ", file name: " + lastUpdatedsb2FileLocation);
 
   return GameModel.findOneAndUpdate(
     {gameID},
     {
-      $set : {lastUpdatedsb2FileLocation, results}
+      $set : {lastUpdatedsb2FileLocation}
     }
   ).then ((game) => {
-    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation, results});
+    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
   })
     .catch ((err) => {
       return Promise.reject (err);
     });
 };
+
+module.exports = new Games();

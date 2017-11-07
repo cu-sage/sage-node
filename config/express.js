@@ -36,7 +36,7 @@ module.exports = function(app, config) {
   });
 
   app.get('/', function (req, res) {
-    res.send("Temp");
+    res.send("SAGE Assessment Server v.1.2");
 
     /*db.student.find({}, function(err, stu){
       if(err){

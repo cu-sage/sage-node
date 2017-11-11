@@ -1,49 +1,21 @@
 let mongoose = require('mongoose');
-let idValidator = require('mongoose-id-validator');
+//let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
+//let ObjectiveId = Schema.Types.objectiveID;
+
 
 var ObjectiveSchema = new Schema({
-  student: {
-    type: String,
-    required: true
+  objectiveID: {
+    type: ObjectId
   },
-  assignment: {
-    type: String,
-    required: true
+  objectiveFileLocation: {
+    type: String
   },
-  project: {
-    type: String,
-    required: true
+  objectiveXML: {
+    type : String
   },
-  abstraction: {
-    type: Number,
-    required: true
-  },
-  parallelization: {
-    type: Number,
-    required: true
-  },
-  logic: {
-    type: Number,
-    required: true
-  },
-  synchronization: {
-    type: Number,
-    required: true
-  },
-  flowControl: {
-    type: Number,
-    required: true
-  },
-  userInteractivity: {
-    type: Number,
-    required: true
-  },
-  dataRepresentation: {
-    type: Number,
-    required: true
-  }
+
 }, {
   toObject: {
     virtuals: true
@@ -52,18 +24,7 @@ var ObjectiveSchema = new Schema({
     virtuals: true
   }
 });
-
-ObjectiveSchema.virtual('mastery').get(function() {
-  return this.abstraction +
-    this.parallelization +
-    this.logic +
-    this.synchronization +
-    this.flowControl +
-    this.userInteractivity +
-    this.dataRepresentation;
-});
-
-ObjectiveSchema.plugin(idValidator);
+//ObjectiveSchema.plugin(idValidator);
 
 var Objective = mongoose.model('Objective', ObjectiveSchema);
 

@@ -9,7 +9,7 @@ var SpriteSchema = new Schema({
     required: true
   },
   Scripts : {
-    type : String,
+    type : [String],
     required: true
   }
 });

@@ -4,13 +4,20 @@ var Response = require('../utils/response');
 let Utilities = require ('../utils/utilities.js');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-function Objectives () {
+
+function Objective () {
 }
-Objectives.prototype.fetchObjective= function (objectiveID) {
+
+Objective.prototype.fetchObjective= function (objectiveID) {
 	return objectiveID;
 };
 
-Objectives.prototype.submitObjective = function (properties) {\
+/*
+Objective.prototype.submitObjective = function (properties) {
+
+  return properties;
+};
+func (a *Assessment) PostAssessment(w http.ResponseWriter, r *http.Request) {
   body, err := ioutil.ReadAll(io.LimitReader(r.Body, readLimit))
   if err != nil {
     log.Printf("Error reading request body: %s\n", err.Error())
@@ -38,23 +45,25 @@ Objectives.prototype.submitObjective = function (properties) {\
 
   utils.WriteJSON(w, http.StatusAccepted, models.PostResult{ID: testSuite.ID})
 }
+*/
+Objective.prototype.submitObjective = function (properties) {
 
-Objectives.prototype.submitGame = function (properties) {
 
-  let {gameID, lastUpdatedsb2FileLocation} = properties;
-  console.log("Processing assessment on Game :"+ gameID + ", file name: " + lastUpdatedsb2FileLocation);
+  let {objectiveID, objectiveXML} = properties;
+  console.log("Processing objective parsing");
 
-  return GameModel.findOneAndUpdate(
-    {gameID},
+  console.log("In Service: " + objectiveXML)
+
+  return ObjectiveModel.findOneAndUpdate(
+    {objectiveID},
     {
-      $set : {lastUpdatedsb2FileLocation}
+      $set : {objectiveXML: "init"}
     }
-  ).then ((game) => {
-    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
-  })
+  ).then ((data) => {
+    return ('Objective collection updated');})
     .catch ((err) => {
-      return Promise.reject (err);
+      return ("err");
     });
 };
 
-module.exports = new Objectives();
+module.exports = new Objective();

@@ -1,3 +1,5 @@
+// This model contains the same functionalities as the deprecated project model.
+//
 let mongoose = require('mongoose');
 //let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
@@ -10,7 +12,10 @@ var GameSchema = new Schema({
   lastUpdatedsb2FileLocation : {
     type : String
   },
-  progressJSON : [],
+  sprites : {
+    type : []
+  },
+  gameJSON : [],
 //  'results' : {},
 }, {
   toObject: {
@@ -20,7 +25,6 @@ var GameSchema = new Schema({
     virtuals: true
   }
 });
-
 var Game = mongoose.model('Game', GameSchema);
 
 module.exports = Game;

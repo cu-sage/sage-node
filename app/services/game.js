@@ -1,31 +1,45 @@
-var GameModel = require('../models/game.js');
+let GameModel = require('../models/game.js');
+let SpriteModel = require('../models/sprite.js');
 //let AssignmentModel = require ('../models/assignment.js');
 var Response = require('../utils/response');
 let Utilities = require ('../utils/utilities.js');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-function Games () {
+function Game () {
 }
-Games.prototype.fetchGame= function (gameIDs) {
+
+Game.prototype.fetchGame= function (gameIDs) {
 	return gameIDs;
 };
 
-Games.prototype.submitGame = function (properties) {
+Game.prototype.overview = function () {
+  return this.find();
 
-  let {gameID, lastUpdatedsb2FileLocation} = properties;
-  console.log("Processing assessment on Game :"+ gameID + ", file name: " + lastUpdatedsb2FileLocation);
+};
+Game.prototype.submitGame = function (properties) {
+  //console.log(properties);
+  let {gameID, lastUpdatedsb2FileLocation, jsonString, sprite} = properties;
 
+  console.log("In Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
     {gameID},
-    {
-      $set : {lastUpdatedsb2FileLocation}
-    }
-  ).then ((game) => {
-    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
-  })
+      {
+        $set : {lastUpdatedsb2FileLocation, gameJSON: jsonString},$addToSet: {sprites: sprite}
+      }
+  ).then ((data) => {
+    return ('Game collection updated');})
     .catch ((err) => {
-      return Promise.reject (err);
+      return ("err");
     });
+      /* for (val of jsonString.children) {
+         return this.findOneAndUpdate(
+           {"gameID": gameID},
+           { $set: {lastUpdatedsb2FileLocation: "in-memory"}},
+               {
+                 $push : {sprites: val}
+               }
+         )
+       }*/
 };
 
-module.exports = new Games();
+module.exports = new Game();

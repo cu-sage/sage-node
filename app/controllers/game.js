@@ -10,23 +10,17 @@ var upload = multer({ storage });
 var GameController = function(app) {
 
   router.get('/:gameID', GameController.fetchGame);
-  router.post('/post/:gameID', upload.single('file'), GameController.submitGameAndProcess);
+  router.post('/post/:gameID', upload.single('file'), GameController.submitAndProcess);
   app.use('/games', router);
 };
 
 GameController.fetchGame = (req, res, next) => {
 	let {gameID} = req.params.gameID;
 	res.send('Current game ID is ' + req.params.gameID + GameService.overview());
-
-  //res.render('testGame',{output:req.params.gameID});/*
-	/*GameService.fetchGame({gameID})
-	.then((game) => res.send(game))
-	.catch ((err) => next (err));*/
 };
 
-GameController.submitGameAndProcess = (req, res, next) => {
+GameController.submitAndProcess = (req, res, next) => {
 
-  //res.status(204).end();
   console.log("Game uploaded");
   console.log("Parsing Game:"+ req.params.gameID);
   for (val of req.body.children) {

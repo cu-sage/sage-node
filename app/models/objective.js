@@ -2,8 +2,6 @@ let mongoose = require('mongoose');
 //let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
-//let ObjectiveId = Schema.Types.objectiveID;
-
 
 var ObjectiveSchema = new Schema({
   objectiveID: {
@@ -12,9 +10,7 @@ var ObjectiveSchema = new Schema({
   objectiveFileLocation: {
     type: String
   },
-  objectiveXML: {
-    type : String
-  },
+  objectiveXML: []
 
 }, {
   toObject: {
@@ -24,8 +20,6 @@ var ObjectiveSchema = new Schema({
     virtuals: true
   }
 });
-//ObjectiveSchema.plugin(idValidator);
-
 var Objective = mongoose.model('Objective', ObjectiveSchema);
 
 module.exports = Objective;

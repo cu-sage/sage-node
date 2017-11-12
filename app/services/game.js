@@ -1,6 +1,5 @@
 let GameModel = require('../models/game.js');
 let SpriteModel = require('../models/sprite.js');
-//let AssignmentModel = require ('../models/assignment.js');
 var Response = require('../utils/response');
 let Utilities = require ('../utils/utilities.js');
 var ObjectId = require('mongoose').Types.ObjectId;
@@ -20,11 +19,11 @@ Game.prototype.submitGame = function (properties) {
   //console.log(properties);
   let {gameID, lastUpdatedsb2FileLocation, jsonString, sprite} = properties;
 
-  console.log("In Service: " + sprite.objName)
+  console.log("Game Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
     {gameID},
       {
-        $set : {lastUpdatedsb2FileLocation, gameJSON: jsonString},$addToSet: {sprites: sprite}
+        $set : {lastUpdatedsb2FileLocation, gameJSON: ""},$addToSet: {sprites: sprite}
       }
   ).then ((data) => {
     return ('Game collection updated');})

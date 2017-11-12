@@ -16,7 +16,6 @@ var GameSchema = new Schema({
     type : []
   },
   gameJSON : [],
-//  'results' : {},
 }, {
   toObject: {
     virtuals: true

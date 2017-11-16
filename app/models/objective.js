@@ -10,7 +10,9 @@ var ObjectiveSchema = new Schema({
   objectiveFileLocation: {
     type: String
   },
-  objectiveXML: []
+  objectiveXML: {
+    type: []
+  }
 
 }, {
   toObject: {

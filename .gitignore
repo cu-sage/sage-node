@@ -18,3 +18,5 @@ data/db/WiredTiger.turtle
 data/db/diagnostic.data/metrics.2017-10-26T23-15-28Z-00000
 .idea/modules.xml
 
+*.log
+app/controllers/__tests__/sampleVALExml

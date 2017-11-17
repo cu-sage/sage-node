@@ -12,6 +12,10 @@ var ObjectiveSchema = new Schema({
   },
   objectiveXML: {
     type: []
+  },
+
+  testcases: {
+    type: []
   }
 
 }, {

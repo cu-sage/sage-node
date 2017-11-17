@@ -11,8 +11,9 @@ function Objective () {
 }
 
 Objective.prototype.fetchObjective= function (objectiveID) {
-	return objectiveID;
+	return ObjectiveModel.findOne(objectiveID);
 };
+
 
 Objective.prototype.submitObjective = function (properties) {
 
@@ -38,7 +39,7 @@ Objective.prototype.submitObjective = function (properties) {
 
   });
   //console.log(VALExml);
-  JSONxml = JSON.stringify(util.inspect(Vxml, false, null));
+  //JSONxml = JSON.stringify(util.inspect(Vxml, false, null));
   JSONxml = JSON.stringify(Vxml);
   JSONxml = JSON.parse(JSONxml);
   //console.log(JSON.stringify(util.inspect(Vxml, false, null)));
@@ -59,6 +60,8 @@ Objective.prototype.submitObjective = function (properties) {
     .catch ((err) => {
       return ("err");
     });
+
 };
+
 
 module.exports = new Objective();

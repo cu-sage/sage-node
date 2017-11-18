@@ -10,26 +10,28 @@ var upload = multer({ storage });
 var ObjectiveController = function(app) {
 
   router.get('/:objectiveID', ObjectiveController.fetchObjective);
-  router.post('/post/:objectiveID', upload.single('file'), ObjectiveController.submitAndProcess);
+  router.post('/post/:objectiveID', ObjectiveController.submitAndProcess);
+  //router.post('/post/:objectiveID', upload.single('file'), ObjectiveController.submitAndProcess);
   app.use('/objectives', router);
 };
 
+
 ObjectiveController.fetchObjective = (req, res, next) => {
-	let {objectiveID} = req.params.objectiveID;
-	res.send('Current objective ID is ' + req.params.objectiveID);
+  ObjectiveService.fetchObjective(req.params.objectiveID)
+    .then((objective) => res.send(objective))
+    .catch((err) => next(err));
 };
 
 ObjectiveController.submitAndProcess = (req, res, next) => {
 
-  console.log("Objective uploaded");
-  console.log("Parsing Objective:"+ req.params.objectiveID);
+  console.log("Submit Objective:"+ req.params.objectiveID);
 
   let properties = {
     objectiveID: req.params.objectiveID, objectiveXML: req.body
   };
 
-  //ObjectiveService.submitObjective(properties);
-  ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
+  ObjectiveService.submitObjective(properties);
+  //ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
   //activeObjective = ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
   //console.log(activeObjective);
   //console.log(JSON.stringify(activeObjective.objectiveXML));

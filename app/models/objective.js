@@ -10,14 +10,7 @@ var ObjectiveSchema = new Schema({
   objectiveFileLocation: {
     type: String
   },
-  objectiveXML: {
-    type: []
-  },
-
-  testcases: {
-    type: []
-  }
-
+  objectiveXML: []
 }, {
   toObject: {
     virtuals: true

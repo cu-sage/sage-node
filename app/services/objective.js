@@ -7,90 +7,42 @@ var xml2js = require('xml2js');
 
 const util = require('util');
 
+String.prototype.replaceAll = function (target, replacement) {
+  return this.split(target).join(replacement);
+};
+
 function Objective () {
 }
 
-Objective.prototype.fetchObjective = function (objectiveID) {
-  //console.log(ObjectiveModel.find({}, {"objectiveXML": 1}));
-  //objectiveCursor = ObjectiveModel.find({}, {"objectiveXML": 1});
-
-/*  ObjectiveModel.findOne({"objectiveID": objectiveID}, function (err, res){
-    if (err){
-      console.log(err)
-    } else{
-      console.log(res);
-    }
-  });*/
-
-  ObjectiveModel.findOneAndUpdate(
-    {objectiveID},
-    {
-      $set : {testcases: "test"}
-    }
-  ).then ((data) => {
-    return ('Objective collection updated');})
-    .catch ((err) => {
-      return ("err");
-    });
-
-/*  ObjectiveModel.find({}, {"objectiveXML": 1}).forEach( function (myDoc) {
-    print (objectiveXML);
-  });*/
-/*  objectiveCursor.forEach( function (myDoc) {
-    print (objectiveXML);
-  });*/
-
-  //return ObjectiveModel.find({}, {"objectiveXML": 1});
+Objective.prototype.fetchObjective= function (objectiveID) {
+  console.log('objectiveID is ', objectiveID);
+  return ObjectiveModel.findOne({ objectiveID });
 };
-
 
 Objective.prototype.submitObjective = function (properties) {
 
   let {objectiveID, objectiveXML} = properties;
-  console.log("Processing objective parsing for " + objectiveID);
-  //console.log(objectiveXML)
+  console.log("Processing objective for " + objectiveID);
 
-  //console.log(objectiveXML)
-  var VALExml = "";
-  var VALExml = objectiveXML.xmlfile;
-  var Vxml = "";
+  objectiveXML = objectiveXML.replaceAll('\\', '');
 
-  // Make XML input string
-  //VALExml = JSON.stringify(VALExml);
-  //VALExml = JSON.stringify(util.inspect(VALExml, false, null));
-  VALExml = util.inspect(VALExml, false, null);
-
-  var Vxml = VALExml.slice(1, -1);
-  //console.log("Vxml0" + Vxml);
   var parser = new xml2js.Parser();
-  parser.parseString (Vxml, {trim: true},function (err, result){
-    Vxml = result;
-
+  parser.parseString (objectiveXML, function (err, result){
+    console.log('result is ', result)
+    console.log('block type is ', result.xml.block[0].$['type']);
+    // we could initiate assessment evaluation here using result
   });
-  //console.log(VALExml);
-  //JSONxml = JSON.stringify(util.inspect(Vxml, false, null));
-  JSONxml = JSON.stringify(Vxml);
-  JSONxml = JSON.parse(JSONxml);
-  //console.log(JSON.stringify(util.inspect(Vxml, false, null)));
-  //console.log(JSONxml)
-  //console.log("In Service: " + objectiveXML);
-
-  //let newObjective = ObjectiveModel ({objectiveID});
-  //newObjective.save();
-  //console.log(newObjective.objectiveFileLocation);
 
   return ObjectiveModel.findOneAndUpdate(
     {objectiveID},
     {
-      $set : {objectiveXML: JSONxml}
+      $set: { objectiveXML: objectiveXML }
     }
   ).then ((data) => {
     return ('Objective collection updated');})
     .catch ((err) => {
       return ("err");
     });
-
 };
-
 
 module.exports = new Objective();

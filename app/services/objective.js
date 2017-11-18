@@ -10,8 +10,37 @@ const util = require('util');
 function Objective () {
 }
 
-Objective.prototype.fetchObjective= function (objectiveID) {
-	return ObjectiveModel.findOne(objectiveID);
+Objective.prototype.fetchObjective = function (objectiveID) {
+  //console.log(ObjectiveModel.find({}, {"objectiveXML": 1}));
+  //objectiveCursor = ObjectiveModel.find({}, {"objectiveXML": 1});
+
+/*  ObjectiveModel.findOne({"objectiveID": objectiveID}, function (err, res){
+    if (err){
+      console.log(err)
+    } else{
+      console.log(res);
+    }
+  });*/
+
+  ObjectiveModel.findOneAndUpdate(
+    {objectiveID},
+    {
+      $set : {testcases: "test"}
+    }
+  ).then ((data) => {
+    return ('Objective collection updated');})
+    .catch ((err) => {
+      return ("err");
+    });
+
+/*  ObjectiveModel.find({}, {"objectiveXML": 1}).forEach( function (myDoc) {
+    print (objectiveXML);
+  });*/
+/*  objectiveCursor.forEach( function (myDoc) {
+    print (objectiveXML);
+  });*/
+
+  //return ObjectiveModel.find({}, {"objectiveXML": 1});
 };
 
 

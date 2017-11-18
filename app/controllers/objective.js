@@ -28,10 +28,11 @@ ObjectiveController.submitAndProcess = (req, res, next) => {
     objectiveID: req.params.objectiveID, objectiveXML: req.body
   };
 
-  ObjectiveService.submitObjective(properties);
-  activeObjective = ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
-  console.log(activeObjective);
-  console.log(JSON.stringify(activeObjective.objectiveXML));
+  //ObjectiveService.submitObjective(properties);
+  ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
+  //activeObjective = ObjectiveService.fetchObjective({},{objectiveID: req.params.objectiveID});
+  //console.log(activeObjective);
+  //console.log(JSON.stringify(activeObjective.objectiveXML));
   res.send("Objective submission complete");
 };
 

@@ -15,8 +15,24 @@ function Objective () {
 }
 
 Objective.prototype.fetchObjective= function (objectiveID) {
-  console.log('objectiveID is ', objectiveID);
-  return ObjectiveModel.findOne({ objectiveID });
+
+  var objective = ObjectiveModel.findOne({ objectiveID });
+
+  objective.exec(function (error, _objective) {
+    if (error)
+      return console.log(error);
+
+    var parser = new xml2js.Parser();
+    parser.parseString(_objective.objectiveXML, function (err, result) {
+      console.log('result is ', result)
+      console.log(result.xml.block[0])
+      console.log('block type is ', result.xml.block[0].$['type']);
+      // we could initiate assessment evaluation here using result
+    });
+  });
+
+  return objective;
+
 };
 
 Objective.prototype.submitObjective = function (properties) {
@@ -26,17 +42,20 @@ Objective.prototype.submitObjective = function (properties) {
 
   objectiveXML = objectiveXML.replaceAll('\\', '');
 
+  var testObjects = [];
   var parser = new xml2js.Parser();
   parser.parseString (objectiveXML, function (err, result){
     console.log('result is ', result)
     console.log('block type is ', result.xml.block[0].$['type']);
+    console.log('block type is ', result.xml.block);
+    testObjects = result.xml.block;
     // we could initiate assessment evaluation here using result
   });
 
   return ObjectiveModel.findOneAndUpdate(
     {objectiveID},
     {
-      $set: { objectiveXML: objectiveXML }
+      $set: { objectiveXML: objectiveXML},$addToSet: {testcases: testObjects }
     }
   ).then ((data) => {
     return ('Objective collection updated');})

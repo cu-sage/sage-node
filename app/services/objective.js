@@ -1,4 +1,5 @@
 var ObjectiveModel = require('../models/objective.js');
+var ResultModel = require('../models/formativeAssessResult.js');
 
 var Response = require('../utils/response');
 let Utilities = require ('../utils/utilities.js');
@@ -24,10 +25,31 @@ Objective.prototype.fetchObjective= function (objectiveID) {
 
     var parser = new xml2js.Parser();
     parser.parseString(_objective.objectiveXML, function (err, result) {
-      console.log('result is ', result)
-      console.log(result.xml.block[0])
-      console.log('block type is ', result.xml.block[0].$['type']);
+      console.log('Evaluate game ');
+
       // we could initiate assessment evaluation here using result
+      // result.xml that contains the blocks in some format
+      // recursively capture each assesment statement
+      for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
+          // Read what is in Actual block
+          for (actualBlock = 0; actualBlock < result.xml.block[expectBlock].value[0].block.length; actualBlock++) {
+            if (result.xml.block[expectBlock].value[0].block[actualBlock].$['type']=='actual_block_type') {
+              //console.log("Pull field: ", result.xml.block[expectBlock].value[0].block[actualBlock]);
+              var blockType = result.xml.block[expectBlock].value[0].block[actualBlock].field[0]._;
+
+/*              ResultModel.findOneAndUpdate(
+                {objectiveID},
+                {
+                  $set: { objectiveXML: objectiveXML},$addToSet: {testcases: testObjects }
+                }
+              );*/
+
+              console.log(blockType);
+            }
+            //console.log(result.xml.block[expectBlock].value[0].block[actualBlock].$['type']);
+        //console.log(result.xml.block[actualBlock].$['type']), result.xml.block[expectBlock].value[0].block[actualBlock].$['type']);
+          }
+      }
     });
   });
 
@@ -43,13 +65,19 @@ Objective.prototype.submitObjective = function (properties) {
   objectiveXML = objectiveXML.replaceAll('\\', '');
 
   var testObjects = [];
-  var parser = new xml2js.Parser();
+  var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
     console.log('result is ', result)
-    console.log('block type is ', result.xml.block[0].$['type']);
-    console.log('block type is ', result.xml.block);
+    console.log('block type is ', result.xml.block[0].$['type'], 'length: ',result.xml.block.length);
+    for (i=0; i < result.xml.block.length; i++) {
+      console.log(result.xml.block[i].$['type']);
+    }
+
+    //console.log('block type is ', result.xml.block);
+
+
+    //Initiate assessment evaluation here using result
     testObjects = result.xml.block;
-    // we could initiate assessment evaluation here using result
   });
 
   return ObjectiveModel.findOneAndUpdate(

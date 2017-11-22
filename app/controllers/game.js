@@ -11,6 +11,7 @@ var GameController = function(app) {
 
   router.get('/:gameID', GameController.fetchGame);
   router.post('/post/:gameID', upload.single('file'), GameController.submitAndProcess);
+  router.post('/students/:studentID/assignments/:assignmentID', upload.single('file'), GameController.searchSubmitAndProcess);
   app.use('/games', router);
 };
 
@@ -30,6 +31,22 @@ GameController.submitAndProcess = (req, res, next) => {
     };
 
     GameService.submitGame(properties);
+    //GameService.submitGame(properties).then((game) => res.send(game)).catch((err) => next(err));
+  }
+  res.send("Game submission complete");
+};
+
+GameController.searchSubmitAndProcess = (req, res, next) => {
+
+  console.log("Processing Student's submission" + req.params.studentID);
+  console.log("Parsing Game:"+ req.body);
+  for (val of req.body.children) {
+    //console.log(val.objName)
+    let properties = {
+      gameID: req.params.gameID, lastUpdatedsb2FileLocation: "in database", jsonString: req.body, sprite: val
+    };
+
+    //GameService.submitGame(properties);
     //GameService.submitGame(properties).then((game) => res.send(game)).catch((err) => next(err));
   }
   res.send("Game submission complete");

@@ -29,13 +29,17 @@ Objective.prototype.fetchObjective= function (objectiveID) {
 
       // we could initiate assessment evaluation here using result
       // result.xml that contains the blocks in some format
-      // recursively capture each assesment statement
+      // future: recursively capture each assesment statement
       for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
           // Read what is in Actual block
           for (actualBlock = 0; actualBlock < result.xml.block[expectBlock].value[0].block.length; actualBlock++) {
+
+            // Process Actual Block CT Concept
             if (result.xml.block[expectBlock].value[0].block[actualBlock].$['type']=='actual_block_type') {
               //console.log("Pull field: ", result.xml.block[expectBlock].value[0].block[actualBlock]);
-              var blockType = result.xml.block[expectBlock].value[0].block[actualBlock].field[0]._;
+              var actualBlockTypeName = result.xml.block[expectBlock].value[0].block[actualBlock].field[0]._;
+              var assertBlockTypeName = result.xml.block[expectBlock].value[0].block[actualBlock].value[0].block[0].$['type'];
+              var matcherBlockTypeName = result.xml.block[expectBlock].value[0].block[actualBlock].value[0].block[0].value[0].block[0].$['type'];
 
 /*              ResultModel.findOneAndUpdate(
                 {objectiveID},
@@ -44,7 +48,7 @@ Objective.prototype.fetchObjective= function (objectiveID) {
                 }
               );*/
 
-              console.log(blockType);
+              console.log(actualBlockTypeName, assertBlockTypeName, matcherBlockTypeName);
             }
             //console.log(result.xml.block[expectBlock].value[0].block[actualBlock].$['type']);
         //console.log(result.xml.block[actualBlock].$['type']), result.xml.block[expectBlock].value[0].block[actualBlock].$['type']);

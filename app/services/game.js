@@ -17,13 +17,13 @@ Game.prototype.overview = function () {
 };
 Game.prototype.submitGame = function (properties) {
   //console.log(properties);
-  let {gameID, lastUpdatedsb2FileLocation, jsonString, sprite} = properties;
+  let {gameID, studentID, lastUpdatedsb2FileLocation, jsonString, sprite} = properties;
 
   console.log("Game Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
     {gameID},
       {
-        $set : {lastUpdatedsb2FileLocation, gameJSON: ""},$addToSet: {sprites: sprite}
+        $set : {lastUpdatedsb2FileLocation,gameJson: [],studentID },$addToSet: {sprites: sprite/*, gameJSON: jsonString*/}
       }
   ).then ((data) => {
     return ('Game collection updated');})

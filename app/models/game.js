@@ -9,6 +9,12 @@ var GameSchema = new Schema({
   gameID: {
     type: ObjectId
   },
+
+  studentID: {
+    type: ObjectId
+  },
+
+
   lastUpdatedsb2FileLocation : {
     type : String
   },

@@ -10,8 +10,9 @@ var upload = multer({ storage });
 var GameController = function(app) {
 
   router.get('/:gameID', GameController.fetchGame);
-  router.post('/post/:gameID', upload.single('file'), GameController.submitAndProcess);
-  router.post('/students/:studentID/assignments/:assignmentID', upload.single('file'), GameController.searchSubmitAndProcess);
+  // Post game from Affinity Space every second
+  router.post('/student/:studentID/game/:gameID', upload.single('file'), GameController.submitAndProcess);
+  router.post('/students/:studentID/assignments/:assignmentID/results', upload.single('file'), GameController.searchSubmitAndProcess);
   app.use('/games', router);
 };
 
@@ -22,18 +23,18 @@ GameController.fetchGame = (req, res, next) => {
 
 GameController.submitAndProcess = (req, res, next) => {
 
-  console.log("Game uploaded");
-  console.log("Parsing Game:"+ req.params.gameID);
+  console.log("Parsing Game:"+ req.params.gameID + " for student " + req.params.studentID);
   for (val of req.body.children) {
     //console.log(val.objName)
     let properties = {
-      gameID: req.params.gameID, lastUpdatedsb2FileLocation: "in database", jsonString: req.body, sprite: val
+      gameID: req.params.gameID, studentID: req.params.studentID, lastUpdatedsb2FileLocation: "in database", jsonString: req.body, sprite: val
     };
 
     GameService.submitGame(properties);
-    //GameService.submitGame(properties).then((game) => res.send(game)).catch((err) => next(err));
+    //GameService.submitGame(properties).then((game) => res.send("Game " + req.params.gameID + " uploaded")).catch((err) => next(err));
   }
-  res.send("Game submission complete");
+  console.log("Game", req.params.gameID, "uploaded");
+  res.send("Game " + req.params.gameID + " uploaded");
 };
 
 GameController.searchSubmitAndProcess = (req, res, next) => {

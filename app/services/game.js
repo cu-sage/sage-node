@@ -22,10 +22,29 @@ Game.prototype.submitGame = function (properties) {
   console.log("Game Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
     {gameID},
-      {
-        $set : {lastUpdatedsb2FileLocation,gameJson: [],studentID },$addToSet: {sprites: sprite/*, gameJSON: jsonString*/}
-      }
-  ).then ((data) => {
+    {
+      $set : {lastUpdatedsb2FileLocation}
+    },
+    {upsert:true}
+  ).then ((game) => {
+    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
+  })
+    .catch ((err) => {
+      return Promise.reject (err);
+    });
+
+  /*return GameModel.findOneAndUpdate(
+    {gameID},
+    {
+      $set: {lastUpdatedsb2FileLocation: "test", gameJson: "test", studentID},
+      $addToSet: {sprites: sprite/!*, gameJSON: jsonString*!/}
+    },
+    {upsert:true}, function (err, doc){
+      if(err) return "error";
+      return "successfully saved";
+    }
+  )*/
+    /*.then ((data) => {
     return ('Game collection updated');})
     .catch ((err) => {
       return ("err");

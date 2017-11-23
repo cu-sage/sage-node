@@ -71,10 +71,10 @@ Objective.prototype.submitObjective = function (properties) {
   var testObjects = [];
   var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
-    console.log('result is ', result)
+    //console.log('result is ', result)
     console.log('block type is ', result.xml.block[0].$['type'], 'length: ',result.xml.block.length);
     for (i=0; i < result.xml.block.length; i++) {
-      console.log(result.xml.block[i].$['type']);
+      //console.log(result.xml.block[i].$['type']);
     }
 
     //console.log('block type is ', result.xml.block);

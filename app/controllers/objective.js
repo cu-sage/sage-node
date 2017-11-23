@@ -9,7 +9,7 @@ var upload = multer({ storage });
 
 var ObjectiveController = function(app) {
 
-  router.get('/:objectiveID', ObjectiveController.fetchObjective);
+  router.get('/:objectiveID/result', ObjectiveController.fetchObjective);
   router.post('/post/:objectiveID', ObjectiveController.submitAndProcess);
   //router.post('/post/:objectiveID', upload.single('file'), ObjectiveController.submitAndProcess);
   app.use('/objectives', router);

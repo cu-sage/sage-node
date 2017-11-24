@@ -74,7 +74,7 @@ Objective.prototype.submitVALEObjective = function (properties) {
 
   objectiveXML = objectiveXML.xmlfile.replaceAll('\\', '');
 
-  var testObjects = [];
+  var testcases = [];
   var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
     //console.log('result is ', result)
@@ -86,8 +86,9 @@ Objective.prototype.submitVALEObjective = function (properties) {
       actualBlockDescription = result.xml.block[expectBlock].value.block.field._
       assertBlockType = result.xml.block[expectBlock].value.block.value.block.$['type']
       matcherBlockType = result.xml.block[expectBlock].value.block.value.block.value.block.$['type']
-      testcase = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType}
-      console.log(actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType);
+      assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType}
+      testcases.push(assessmentStatement)
+      console.log(assessmentStatement);
 /*      if (matcherBlockType = "matcher_be_present"){
         console.log ("Looking for block type ", actualBlockDescription)
         var game = GameModel.findOne({ gameID });
@@ -110,10 +111,9 @@ Objective.prototype.submitVALEObjective = function (properties) {
   return ObjectiveModel.findOneAndUpdate(
     {objectiveID},
     {
-      $set: { objectiveXML}
-      //$addToSet: {objectiveXML}
-    }
-//    ,{upsert:true}
+      $set: { objectiveXML, testcases}
+      //,$addToSet: {testcases: assessmentStatement}
+    },{upsert:true}
   ).then ((data) => {
     return ('Objective collection updated');})
     .catch ((err) => {

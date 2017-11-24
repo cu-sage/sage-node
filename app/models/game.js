@@ -14,6 +14,9 @@ var GameSchema = new Schema({
     type: String
   },
 
+  objcetiveID: {
+    type: String
+  },
   sprites : {
     type : []
   },

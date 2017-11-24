@@ -27,7 +27,7 @@ GameController.submitAndProcess = (req, res, next) => {
   for (val of req.body.children) {
     //console.log(val.objName)
     let properties = {
-      gameID: req.params.gameID, studentID: req.params.studentID, lastUpdatedsb2FileLocation: "test2", jsonString: req.body, sprite: val
+      gameID: req.params.gameID, studentID: req.params.studentID, jsonString: req.body, sprite: val
     };
 
     GameService.submitGame(properties);

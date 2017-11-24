@@ -7,17 +7,13 @@ let ObjectId = Schema.Types.ObjectId;
 
 var GameSchema = new Schema({
   gameID: {
-    type: ObjectId
+    type: Number
   },
 
   studentID: {
-    type: ObjectId
+    type: String
   },
 
-
-  lastUpdatedsb2FileLocation : {
-    type : String
-  },
   sprites : {
     type : []
   },

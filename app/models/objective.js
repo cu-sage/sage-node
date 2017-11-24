@@ -10,8 +10,25 @@ var ObjectiveSchema = new Schema({
   objectiveFileLocation: {
     type: String
   },
-  objectiveXML: [],
-  testcases: []
+  objectiveXML: {
+    type: String
+  },
+  testcases: [
+    {
+      actualBlockType: {
+        type: String
+      },
+      actualBlockDescription: {
+        type: String
+      },
+      assertBlockType: {
+        type: String
+      },
+      matcherBlockType: {
+        type: String
+      }
+    }
+  ]
 }, {
   toObject: {
     virtuals: true

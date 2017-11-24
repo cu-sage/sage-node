@@ -17,17 +17,17 @@ Game.prototype.overview = function () {
 };
 Game.prototype.submitGame = function (properties) {
   //console.log(properties);
-  let {gameID, studentID, lastUpdatedsb2FileLocation, jsonString, sprite} = properties;
+  let {gameID, studentID, jsonString, sprite} = properties;
 
   console.log("Game Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
-    {gameID},
+    {gameID, studentID},
     {
-      $set : {lastUpdatedsb2FileLocation}
+      $addToSet: {sprites: sprite/*, gameJSON: jsonString*/}
     },
     {upsert:true}
   ).then ((game) => {
-    return Promise.resolve ({message: 'Updated', lastUpdatedsb2FileLocation});
+    return Promise.resolve ({message: 'Updated'});
   })
     .catch ((err) => {
       return Promise.reject (err);

@@ -1,5 +1,6 @@
 var ObjectiveModel = require('../models/objective.js');
 var ResultModel = require('../models/formativeAssessResult.js');
+let GameModel = require('../models/game.js');
 
 var Response = require('../utils/response');
 let Utilities = require ('../utils/utilities.js');
@@ -59,6 +60,65 @@ Objective.prototype.fetchObjective= function (objectiveID) {
 
   return objective;
 
+};
+
+Objective.prototype.submitVALEObjective = function (properties) {
+/*
+  objective.exec(function (error, _objective) {
+    if (error)
+      return console.log(error);
+*/
+
+  let {objectiveID, objectiveXML} = properties;
+  console.log("Processing objective for " + objectiveID);
+
+  objectiveXML = objectiveXML.xmlfile.replaceAll('\\', '');
+
+  var testObjects = [];
+  var parser = new xml2js.Parser({explicitArray : false});
+  parser.parseString (objectiveXML, function (err, result){
+    //console.log('result is ', result)
+    //console.log(objectiveXML)
+    //console.log('block type is ', result.xml.block[0].$['type'], 'length: ',result.xml.block.length);
+    for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
+
+      actualBlockType = result.xml.block[expectBlock].value.block.$['type']
+      actualBlockDescription = result.xml.block[expectBlock].value.block.field._
+      assertBlockType = result.xml.block[expectBlock].value.block.value.block.$['type']
+      matcherBlockType = result.xml.block[expectBlock].value.block.value.block.value.block.$['type']
+      testcase = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType}
+      console.log(actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType);
+/*      if (matcherBlockType = "matcher_be_present"){
+        console.log ("Looking for block type ", actualBlockDescription)
+        var game = GameModel.findOne({ gameID });
+        if (game.gameJSON[0].includes("whenGreenFlag") = true){
+          console.log ("Pass Parallelization")
+        }
+        else {
+          console.log ("Fail Parallelization")
+        }
+
+      }*/
+    }
+  });
+
+  ObjectiveModel.update(
+    {objectiveID},
+    {$set: { objectiveXML: "", testcases: []}}
+  )
+
+  return ObjectiveModel.findOneAndUpdate(
+    {objectiveID},
+    {
+      $set: { objectiveXML}
+      //$addToSet: {objectiveXML}
+    }
+//    ,{upsert:true}
+  ).then ((data) => {
+    return ('Objective collection updated');})
+    .catch ((err) => {
+      return ("err");
+    });
 };
 
 Objective.prototype.submitObjective = function (properties) {

@@ -22,21 +22,23 @@ AssessGame.prototype.assessGame = function (properties) {
         console.log(testStatements[0])
 
 // SAVING document for the first time, might need to make this part of a dedicated Save feature
-        let newResult = ResultModel ({gameID: gameID, objectiveID: objectiveID });
-        newResult.save();
+        //let newResult = ResultModel ({gameID: 125, objectiveID: objectiveID});
+/*        let newResult = ResultModel ({gameID: gameID, objectiveID: objectiveID , rawString: "test2"});
+        newResult.save();*/
 
-        ResultModel.findOneAndUpdate(
+/*        ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
           {$set: { "rawString": testStatements[0]}}, {$addToSet: testStatements}, {upsert: true}
-        )
-
-
-        ResultModel.findOneAndUpdate(
+        )*/
+        return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
-          {$set: { "rawString": testStatements[0], "testStatements": testStatements}}, {upsert: true}
-        )
+          {$set: {testStatements, rawString: "test1"}}, {upsert: true}
+        ).then ((data) => {
+          return ('Objective collection updated');})
+          .catch ((err) => {
+            return ("err");
+          });
         //console.log(testStatements)
-        return result.testStatements
       }
     }
   )

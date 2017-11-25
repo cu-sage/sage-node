@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var GameService = require ('../services/game.js');
+var ObjectiveService = require ('../services/objective.js');
 var multer  = require('multer');
 var storage = multer.diskStorage({
   destination (req, file, cb) {cb(null, './uploads/games');},
@@ -22,7 +23,9 @@ GameController.fetchGame = (req, res, next) => {
 };
 
 GameController.submitAndProcess = (req, res, next) => {
-
+  let properties = {
+    gameID: req.params.gameID, studentID: req.params.studentID, jsonString: req.body, objectiveID: req.params.objectiveID
+  };
   console.log("Parsing Game:"+ req.params.gameID + " for student " + req.params.studentID);
   for (val of req.body.children) {
     //console.log(val.objName)
@@ -31,10 +34,17 @@ GameController.submitAndProcess = (req, res, next) => {
     };
 
     GameService.submitGame(properties);
+
     //GameService.submitGame(properties).then((game) => res.send("Game " + req.params.gameID + " uploaded")).catch((err) => next(err));
   }
+
   console.log("Game", req.params.gameID, "uploaded");
+
+  ObjectiveService.submitAssessmentResult(properties);
+
+
   res.send("Game " + req.params.gameID + " uploaded");
+
 };
 
 GameController.searchSubmitAndProcess = (req, res, next) => {

@@ -21,7 +21,7 @@ Game.prototype.submitGame = function (properties) {
 
   console.log("Game Service: " + sprite.objName)
   return GameModel.findOneAndUpdate(
-    {gameID, studentID, objectiveID},
+    {gameID, studentID},
     {
       $addToSet: {sprites: sprite/*, gameJSON: jsonString*/}
     },

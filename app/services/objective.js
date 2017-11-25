@@ -29,8 +29,6 @@ Objective.prototype.fetchObjective= function (objectiveID) {
       console.log('Evaluate game ');
 
       // we could initiate assessment evaluation here using result
-      // result.xml that contains the blocks in some format
-      // future: recursively capture each assesment statement
       for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
           // Read what is in Actual block
           for (actualBlock = 0; actualBlock < result.xml.block[expectBlock].value[0].block.length; actualBlock++) {
@@ -62,13 +60,39 @@ Objective.prototype.fetchObjective= function (objectiveID) {
 
 };
 
-Objective.prototype.submitVALEObjective = function (properties) {
-/*
-  objective.exec(function (error, _objective) {
-    if (error)
-      return console.log(error);
-*/
+Objective.prototype.submitAssessmentResult = function (properties) {
+  let {gameID, studentID, jsonString, objectiveID} = properties;
+  //let statements = []
+  console.log("Running assessment " + objectiveID + " for game " + gameID);
+  ObjectiveModel.findOne(
+    {objectiveID},function output (err, result){
+      if(err){
+        return err;
+      } else {
+        //console.log(result.testcases)
+        statements=result.testcases
+        console.log(statements[0])
+        return result.testcases
+      }
+    }
+  )
 
+
+  //console.log(currentObjective.objectiveXML)
+/*        if (matcherBlockType = "matcher_be_present"){
+          console.log ("Looking for block type ", actualBlockDescription)
+          var game = GameModel.findOne({ gameID });
+          if (game.gameJSON[0].includes("whenGreenFlag") = true){
+            console.log ("Pass Parallelization")
+          }
+          else {
+            console.log ("Fail Parallelization")
+          }
+
+        }*/
+}
+
+Objective.prototype.submitVALEObjective = function (properties) {
   let {objectiveID, objectiveXML} = properties;
   console.log("Processing objective for " + objectiveID);
 
@@ -77,9 +101,7 @@ Objective.prototype.submitVALEObjective = function (properties) {
   var testcases = [];
   var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
-    //console.log('result is ', result)
-    //console.log(objectiveXML)
-    //console.log('block type is ', result.xml.block[0].$['type'], 'length: ',result.xml.block.length);
+
     for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
 
       actualBlockType = result.xml.block[expectBlock].value.block.$['type']
@@ -89,20 +111,10 @@ Objective.prototype.submitVALEObjective = function (properties) {
       assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType}
       testcases.push(assessmentStatement)
       console.log(assessmentStatement);
-/*      if (matcherBlockType = "matcher_be_present"){
-        console.log ("Looking for block type ", actualBlockDescription)
-        var game = GameModel.findOne({ gameID });
-        if (game.gameJSON[0].includes("whenGreenFlag") = true){
-          console.log ("Pass Parallelization")
-        }
-        else {
-          console.log ("Fail Parallelization")
-        }
-
-      }*/
     }
   });
 
+  // Clear existing XML and testcases
   ObjectiveModel.update(
     {objectiveID},
     {$set: { objectiveXML: "", testcases: []}}

@@ -39,10 +39,6 @@ GameController.submitAndProcess = (req, res, next) => {
   }
 
   console.log("Game", req.params.gameID, "uploaded");
-
-  ObjectiveService.submitAssessmentResult(properties);
-
-
   res.send("Game " + req.params.gameID + " uploaded");
 
 };

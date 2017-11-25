@@ -4,7 +4,7 @@ let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
 var ResultSchema = new Schema({
-  PassOrFail: {
+  Pass: {
     type: "boolean"
   },
   Description: {

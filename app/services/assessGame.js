@@ -8,10 +8,10 @@ var ObjectId = require('mongoose').Types.ObjectId;
 function AssessGame () {
 }
 
-AssessGame.prototype.assessGame = function (properties) {
+AssessGame.prototype.retrieveAssessment = function (properties) {
   let {gameID, objectiveID} = properties;
 
-  console.log("Running assessment");
+  console.log("Pulling assessment statements from the Objective database");
   ObjectiveModel.findOne(
     {objectiveID},function output (err, result){
       if(err){
@@ -19,7 +19,7 @@ AssessGame.prototype.assessGame = function (properties) {
       } else {
         //console.log(result.testcases)
         testStatements=result.testcases
-        console.log(testStatements[0])
+        //console.log(testStatements[0])
 
 // SAVING document for the first time, might need to make this part of a dedicated Save feature
         //let newResult = ResultModel ({gameID: 125, objectiveID: objectiveID});
@@ -54,6 +54,42 @@ AssessGame.prototype.assessGame = function (properties) {
             }
 
           }*/
+}
+
+
+AssessGame.prototype.evaluateGame = function (properties) {
+  let {gameID, objectiveID} = properties;
+  let evaluationCriterias = []
+  console.log("Producing evaluation result for " + gameID);
+  ResultModel.findOne(
+    {objectiveID},function output (err, result){
+      if(err){
+        return err;
+      } else {
+        //console.log(result.testcases)
+        evaluationCriterias=result.testStatements
+        //console.log("Result"+ result)
+
+
+        for (statementID=0; statementID<evaluationCriterias.length; statementID++) {
+          //console.log(evaluationCriterias[0].assertBlockType)
+
+          if (evaluationCriterias[statementID].matcherBlockType = "matcher_be_present"){
+            console.log ("Looking for block type ", evaluationCriterias[statementID].actualBlockType)
+/*            var game = GameModel.findOne({ gameID });
+            if (game.gameJSON[0].includes("whenGreenFlag") = true){
+              console.log ("Pass Parallelization")
+            }
+            else {
+              console.log ("Fail Parallelization")*/
+          }
+        }
+      }
+    }
+  )
+  return evaluationCriterias
+
+
 }
 
 module.exports = new AssessGame();

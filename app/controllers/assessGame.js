@@ -1,6 +1,6 @@
-var router = require('express').Router();
+  var router = require('express').Router();
+var assessGameService = require ('../services/assessGame.js');
 var ObjectiveService = require ('../services/objective.js');
-
 var AssessGameController = function(app) {
 
   router.get('/game/:gameID/objective/:objectiveID', AssessGameController.assessGameAgainstObjective);
@@ -11,14 +11,13 @@ var AssessGameController = function(app) {
 
 
 AssessGameController.assessGameAgainstObjective = (req, res, next) => {
+  let properties = {
+    gameID: req.params.gameID, objectiveID: req.params.objectiveID
+  };
+  console.log("Assessing Game:" + req.params.gameID + " using Objective " + req.params.objectiveID);
+  var assessStatements = assessGameService.assessGame(properties)
 
-
-  ObjectiveService.submitAssessmentResult(properties);
-
-
-  ObjectiveService.fetchObjective(req.params.objectiveID)
-    .then((objective) => res.send(objective))
-    .catch((err) => next(err));
+  res.send(assessStatements)
 };
 
 module.exports = AssessGameController;

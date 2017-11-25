@@ -1,5 +1,5 @@
 var ObjectiveModel = require('../models/objective.js');
-var ResultModel = require('../models/formativeAssessResult.js');
+var ResultModel = require('../models/assessmentResult.js');
 let GameModel = require('../models/game.js');
 
 var Response = require('../utils/response');
@@ -57,40 +57,7 @@ Objective.prototype.fetchObjective= function (objectiveID) {
   });
 
   return objective;
-
 };
-
-Objective.prototype.submitAssessmentResult = function (properties) {
-  let {gameID, studentID, jsonString, objectiveID} = properties;
-  //let statements = []
-  console.log("Running assessment " + objectiveID + " for game " + gameID);
-  ObjectiveModel.findOne(
-    {objectiveID},function output (err, result){
-      if(err){
-        return err;
-      } else {
-        //console.log(result.testcases)
-        statements=result.testcases
-        console.log(statements[0])
-        return result.testcases
-      }
-    }
-  )
-
-
-  //console.log(currentObjective.objectiveXML)
-/*        if (matcherBlockType = "matcher_be_present"){
-          console.log ("Looking for block type ", actualBlockDescription)
-          var game = GameModel.findOne({ gameID });
-          if (game.gameJSON[0].includes("whenGreenFlag") = true){
-            console.log ("Pass Parallelization")
-          }
-          else {
-            console.log ("Fail Parallelization")
-          }
-
-        }*/
-}
 
 Objective.prototype.submitVALEObjective = function (properties) {
   let {objectiveID, objectiveXML} = properties;

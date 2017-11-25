@@ -19,7 +19,7 @@ Game.prototype.submitGame = function (properties) {
   //console.log(properties);
   let {gameID, studentID, jsonString, sprite, objectiveID} = properties;
 
-  console.log("Game Service: " + sprite.objName)
+  console.log("Adding " + sprite.objName + " sprite to database")
   return GameModel.findOneAndUpdate(
     {gameID, studentID},
     {

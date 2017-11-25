@@ -1,7 +1,6 @@
-var ObjectiveModel = require('../models/objective.js');
 var ResultModel = require('../models/assessmentResult.js');
+let ObjectiveModel = require('../models/objective.js');
 let GameModel = require('../models/game.js');
-
 var Response = require('../utils/response');
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -11,7 +10,7 @@ function AssessGame () {
 AssessGame.prototype.retrieveAssessment = function (properties) {
   let {gameID, objectiveID} = properties;
 
-  console.log("Pulling assessment statements from the Objective database");
+  console.log("Pulling assessment statements from Objective " + objectiveID);
   ObjectiveModel.findOne(
     {objectiveID},function output (err, result){
       if(err){
@@ -26,10 +25,6 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
 /*        let newResult = ResultModel ({gameID: gameID, objectiveID: objectiveID , rawString: "test2"});
         newResult.save();*/
 
-/*        ResultModel.findOneAndUpdate(
-          {objectiveID, gameID},
-          {$set: { "rawString": testStatements[0]}}, {$addToSet: testStatements}, {upsert: true}
-        )*/
         return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
           {$set: {testStatements, rawString: "test1"}}, {upsert: true}
@@ -38,29 +33,33 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
           .catch ((err) => {
             return ("err");
           });
-        //console.log(testStatements)
       }
     }
   )
-  //console.log(currentObjective.objectiveXML)
-  /*        if (matcherBlockType = "matcher_be_present"){
-            console.log ("Looking for block type ", actualBlockDescription)
-            var game = GameModel.findOne({ gameID });
-            if (game.gameJSON[0].includes("whenGreenFlag") = true){
-              console.log ("Pass Parallelization")
-            }
-            else {
-              console.log ("Fail Parallelization")
-            }
-
-          }*/
 }
-
 
 AssessGame.prototype.evaluateGame = function (properties) {
   let {gameID, objectiveID} = properties;
   let evaluationCriterias = []
-  console.log("Producing evaluation result for " + gameID);
+  GameModel.findOne(
+    {gameID},function output (err, result) {
+      if (err) {
+        return err;
+      } else {
+
+        //console.log(result.sprites[0])
+        return ResultModel.findOneAndUpdate(
+          {objectiveID, gameID},
+          {$set: {currentGame: result.sprites}}, {upsert: true}
+        ).then ((data) => {
+          return ('Latest game ' + gameID + ' is ready to be evaluated');})
+          .catch ((err) => {
+            return ("err");
+          });
+      }
+    });
+
+  console.log("Producing evaluation result for game " + gameID);
   ResultModel.findOne(
     {objectiveID},function output (err, result){
       if(err){

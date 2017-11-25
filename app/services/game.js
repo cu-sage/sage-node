@@ -13,13 +13,13 @@ Game.prototype.fetchGame= function (gameIDs) {
 
 Game.prototype.overview = function () {
   return this.find();
-
 };
+
 Game.prototype.submitGame = function (properties) {
   //console.log(properties);
   let {gameID, studentID, jsonString, sprite, objectiveID} = properties;
 
-  console.log("Adding " + sprite.objName + " sprite to database")
+  console.log("Updating " + sprite.objName + " sprite in game " + gameID)
   return GameModel.findOneAndUpdate(
     {gameID, studentID},
     {
@@ -32,32 +32,6 @@ Game.prototype.submitGame = function (properties) {
     .catch ((err) => {
       return Promise.reject (err);
     });
-
-  /*return GameModel.findOneAndUpdate(
-    {gameID},
-    {
-      $set: {lastUpdatedsb2FileLocation: "test", gameJson: "test", studentID},
-      $addToSet: {sprites: sprite/!*, gameJSON: jsonString*!/}
-    },
-    {upsert:true}, function (err, doc){
-      if(err) return "error";
-      return "successfully saved";
-    }
-  )*/
-    /*.then ((data) => {
-    return ('Game collection updated');})
-    .catch ((err) => {
-      return ("err");
-    });
-      /* for (val of jsonString.children) {
-         return this.findOneAndUpdate(
-           {"gameID": gameID},
-           { $set: {lastUpdatedsb2FileLocation: "in-memory"}},
-               {
-                 $push : {sprites: val}
-               }
-         )
-       }*/
 };
 
 module.exports = new Game();

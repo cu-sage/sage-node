@@ -13,6 +13,7 @@ var ResultSchema = new Schema({
   rawString: {
     type: String
   },
+  currentGame: [],
   testStatements: [],
   testResult: [
     {

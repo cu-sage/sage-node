@@ -15,16 +15,8 @@ var ResultSchema = new Schema({
   },
   currentGame: [],
   testStatements: [],
-  testResult: [
-    {
-      "Pass": {
-        type: "boolean"
-      },
-      "Description": {
-        type: String
-      },
-      "Actions": []
-    }]}, {
+  testResult: []
+  }, {
       toObject: {
         virtuals: true
       },

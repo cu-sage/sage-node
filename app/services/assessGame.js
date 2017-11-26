@@ -67,20 +67,34 @@ AssessGame.prototype.evaluateGame = function (properties) {
       } else {
         //console.log(result.testcases)
         evaluationCriterias=result.testStatements
-        //console.log("Result"+ result)
-
+        currGame=JSON.stringify(result.currentGame)
+        console.log("Result " + currGame)
 
         for (statementID=0; statementID<evaluationCriterias.length; statementID++) {
           //console.log(evaluationCriterias[0].assertBlockType)
 
-          if (evaluationCriterias[statementID].matcherBlockType = "matcher_be_present"){
-            console.log ("Looking for block type ", evaluationCriterias[statementID].actualBlockType)
-/*            var game = GameModel.findOne({ gameID });
-            if (game.gameJSON[0].includes("whenGreenFlag") = true){
-              console.log ("Pass Parallelization")
+          if (evaluationCriterias[statementID].matcherBlockType = "matcher_be_present") {
+            console.log("Looking for block type ", evaluationCriterias[statementID].actualBlockDescription)
+
+            if(evaluationCriterias[statementID].actualBlockDescription == "Parallelization") {
+              if (currGame.includes("whenGreenFlag")) {
+                console.log("Pass Parallelization")
+                let resultStatement = {"pass": true};
+                return ResultModel.findOneAndUpdate(
+                  {objectiveID, gameID},
+                  {$set: {rawString: "aaaa"}}, {upsert: true}
+                  //{$addToSet: {testresult: resultStatement}}, {upsert: true}
+                ).then ((data) => {
+                  return ('Result recorded');})
+                  .catch ((err) => {
+                    return ("err");
+                  });
+                insertTestResult(gameID, objectiveID, resultStatement)
+              }
+              else {
+                console.log("Fail Parallelization")
+              }
             }
-            else {
-              console.log ("Fail Parallelization")*/
           }
         }
       }
@@ -91,4 +105,16 @@ AssessGame.prototype.evaluateGame = function (properties) {
 
 }
 
+let insertTestResult = function (gameID, objectiveID, resultstmt) {
+
+  return ResultModel.findOneAndUpdate(
+    {objectiveID, gameID},
+    {$set: {rawString: "aaaa"}}, {upsert: true}
+    //{$addToSet: {testresult: resultstmt}}, {upsert: true}
+  ).then ((data) => {
+    return ('Result recorded');})
+    .catch ((err) => {
+      return ("err");
+    });
+}
 module.exports = new AssessGame();

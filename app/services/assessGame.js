@@ -27,7 +27,7 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
 
         return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
-          {$set: {testStatements, rawString: "test1"}}, {upsert: true}
+          {$set: {testStatements, testResult: [],rawString: "test1"}}, {upsert: true}
         ).then ((data) => {
           return ('Objective collection updated');})
           .catch ((err) => {
@@ -80,7 +80,8 @@ AssessGame.prototype.evaluateGame = function (properties) {
               if (currGame.includes("whenGreenFlag")) {
                 console.log("Pass Parallelization")
                 var resultStatement = []
-                resultStatement.push({"pass": true});
+                resultStatement.push({"pass": true, "description": "Application should have parallelization",
+                  "actions": null});
                 console.log(resultStatement)
                 return ResultModel.findOneAndUpdate(
                   {objectiveID, gameID},

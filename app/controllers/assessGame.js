@@ -16,8 +16,9 @@ AssessGameController.assessGameAgainstObjective = (req, res, next) => {
   };
   console.log("Assessing Game:" + req.params.gameID + " using Objective " + req.params.objectiveID);
   assessGameService.retrieveAssessment(properties)
-  var evaluateGame= assessGameService.evaluateGame(properties)
-  res.send("Evaluation completed")
+  evaluateGame= assessGameService.evaluateGame(properties)
+  console.log("Evaluation completed")
+  res.send(evaluateGame)
 };
 
 module.exports = AssessGameController;

@@ -68,7 +68,7 @@ AssessGame.prototype.evaluateGame = function (properties) {
         //console.log(result.testcases)
         evaluationCriterias=result.testStatements
         currGame=JSON.stringify(result.currentGame)
-        console.log("Result " + currGame)
+        //console.log("Result " + currGame)
 
         for (statementID=0; statementID<evaluationCriterias.length; statementID++) {
           //console.log(evaluationCriterias[0].assertBlockType)
@@ -79,11 +79,13 @@ AssessGame.prototype.evaluateGame = function (properties) {
             if(evaluationCriterias[statementID].actualBlockDescription == "Parallelization") {
               if (currGame.includes("whenGreenFlag")) {
                 console.log("Pass Parallelization")
-                let resultStatement = {"pass": true};
+                var resultStatement = []
+                resultStatement.push({"pass": true});
+                console.log(resultStatement)
                 return ResultModel.findOneAndUpdate(
                   {objectiveID, gameID},
-                  {$set: {rawString: "aaaa"}}, {upsert: true}
-                  //{$addToSet: {testresult: resultStatement}}, {upsert: true}
+                  //{$set: {rawString: "aaaab"}}, {upsert: true}
+                  {$addToSet: {testResult: resultStatement}}, {upsert: true}
                 ).then ((data) => {
                   return ('Result recorded');})
                   .catch ((err) => {
@@ -110,7 +112,7 @@ let insertTestResult = function (gameID, objectiveID, resultstmt) {
   return ResultModel.findOneAndUpdate(
     {objectiveID, gameID},
     {$set: {rawString: "aaaa"}}, {upsert: true}
-    //{$addToSet: {testresult: resultstmt}}, {upsert: true}
+    //{$addToSet: {testResult: resultstmt}}, {upsert: true}
   ).then ((data) => {
     return ('Result recorded');})
     .catch ((err) => {

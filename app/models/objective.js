@@ -26,6 +26,15 @@ var ObjectiveSchema = new Schema({
       },
       matcherBlockType: {
         type: String
+      },
+      triggerBlockType: {
+        type: String
+      },
+      actionBlockType: {
+        type: String
+      },
+      actionBlockName: {
+        type: String
       }
     }
   ]

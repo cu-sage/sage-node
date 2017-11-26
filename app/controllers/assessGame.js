@@ -6,7 +6,7 @@ var AssessGameController = function(app) {
   router.get('/game/:gameID/objective/:objectiveID', AssessGameController.assessGameAgainstObjective);
   //router.post('/post/:objectiveID', AssessGameController.submitAndProcess);
   //router.post('/post/:objectiveID', upload.single('file'), ObjectiveController.submitAndProcess);
-  app.use('/assessGame', router);
+  app.use('/assess', router);
 };
 
 

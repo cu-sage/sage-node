@@ -60,6 +60,32 @@ Objective.prototype.fetchObjective= function (objectiveID) {
 };
 
 Objective.prototype.submitVALEObjective = function (properties) {
+  function processBlock(blocks,testcasearray){
+    if (blocks){
+
+        console.log("Processing block type " + blocks.value.block.$['type'])
+
+        actualBlockType = blocks.value.block.$['type']
+        actualBlockDescription = blocks.value.block.field._
+        assertBlockType = blocks.value.block.value.block.$['type']
+        matcherBlockType = blocks.value.block.value.block.value.block.$['type']
+        triggerBlockType = null
+        actionBlockType = null
+        actionBlockName = null
+        if (blocks.next){
+          //processBlock(blocks.next.block)
+          triggerBlockType = blocks.next.block.$['type']
+          actionBlockType = blocks.next.block.value.block.$['type']
+          actionBlockName = blocks.next.block.value.block.field._
+        }
+
+        assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType, triggerBlockType, actionBlockType,actionBlockName}
+        testcasearray.push(assessmentStatement)
+        //console.log("Recursive " + testcasearray)
+        return testcasearray
+        //console.log("Recursive " + JSON.stringify(assessmentStatement))
+    }
+  }
   let {objectiveID, objectiveXML} = properties;
   console.log("Processing objective for " + objectiveID);
 
@@ -69,16 +95,20 @@ Objective.prototype.submitVALEObjective = function (properties) {
   var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
 
-    for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
 
-      actualBlockType = result.xml.block[expectBlock].value.block.$['type']
+    for (expectBlock=0; expectBlock < result.xml.block.length; expectBlock++) {
+      testcases = processBlock(result.xml.block[expectBlock],testcases)
+
+/*      actualBlockType = result.xml.block[expectBlock].value.block.$['type']
       actualBlockDescription = result.xml.block[expectBlock].value.block.field._
       assertBlockType = result.xml.block[expectBlock].value.block.value.block.$['type']
       matcherBlockType = result.xml.block[expectBlock].value.block.value.block.value.block.$['type']
       assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType}
-      testcases.push(assessmentStatement)
-      console.log(assessmentStatement);
+      testcases.push(assessmentStatement)*/
+      //console.log(assessmentStatement);
     }
+
+    console.log("Upload this testcase " + JSON.stringify(testcases))
   });
 
   // Clear existing XML and testcases

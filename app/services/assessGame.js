@@ -65,37 +65,44 @@ AssessGame.prototype.evaluateGame = function (properties) {
       if(err){
         return err;
       } else {
-        //console.log(result.testcases)
         evaluationCriterias=result.testStatements
         currGame=JSON.stringify(result.currentGame)
-        //console.log("Result " + currGame)
-
+        var resultStatementArray = []
+        // Evaluate every test Statement
         for (statementID=0; statementID<evaluationCriterias.length; statementID++) {
-          //console.log(evaluationCriterias[0].assertBlockType)
 
           if (evaluationCriterias[statementID].matcherBlockType = "matcher_be_present") {
             console.log("Looking for block type ", evaluationCriterias[statementID].actualBlockDescription)
 
             if(evaluationCriterias[statementID].actualBlockDescription == "Parallelization") {
               if (currGame.includes("whenGreenFlag")) {
-                console.log("Pass Parallelization")
-                var resultStatement = []
-                resultStatement.push({"pass": true, "description": "Application should have parallelization",
+
+                resultStatementArray.push({"pass": true, "description": "Application should have parallelization",
                   "actions": null});
-                console.log(resultStatement)
+                //insertTestResult(gameID, objectiveID, resultStatementArray)
                 return ResultModel.findOneAndUpdate(
                   {objectiveID, gameID},
                   //{$set: {rawString: "aaaab"}}, {upsert: true}
-                  {$addToSet: {testResult: resultStatement}}, {upsert: true}
+                  {$addToSet: {testResult: resultStatementArray}}, {upsert: true}
                 ).then ((data) => {
                   return ('Result recorded');})
                   .catch ((err) => {
                     return ("err");
                   });
-                insertTestResult(gameID, objectiveID, resultStatement)
               }
               else {
-                console.log("Fail Parallelization")
+                resultStatementArray.push({"pass": false, "description": "Application should have parallelization",
+                  "actions": null});
+                //insertTestResult(gameID, objectiveID, resultStatementArray)
+                return ResultModel.findOneAndUpdate(
+                  {objectiveID, gameID},
+                  //{$set: {rawString: "aaaab"}}, {upsert: true}
+                  {$addToSet: {testResult: resultStatementArray}}, {upsert: true}
+                ).then ((data) => {
+                  return ('Result recorded');})
+                  .catch ((err) => {
+                    return ("err");
+                  });
               }
             }
           }
@@ -109,11 +116,10 @@ AssessGame.prototype.evaluateGame = function (properties) {
 }
 
 let insertTestResult = function (gameID, objectiveID, resultstmt) {
-
   return ResultModel.findOneAndUpdate(
     {objectiveID, gameID},
-    {$set: {rawString: "aaaa"}}, {upsert: true}
-    //{$addToSet: {testResult: resultstmt}}, {upsert: true}
+    //{$set: {rawString: "aaaa"}}, {upsert: true}
+    {$addToSet: {testResult: resultstmt}}, {upsert: true}
   ).then ((data) => {
     return ('Result recorded');})
     .catch ((err) => {

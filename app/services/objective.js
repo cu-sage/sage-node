@@ -1,5 +1,5 @@
 var ObjectiveModel = require('../models/objective.js');
-var ResultModel = require('../models/assessmentResult.js');
+var ResultModel = require('../models/result.js');
 let GameModel = require('../models/game.js');
 
 var Response = require('../utils/response');

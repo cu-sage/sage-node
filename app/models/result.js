@@ -14,8 +14,8 @@ var ResultSchema = new Schema({
     type: String
   },
   currentGame: [],
-  testStatements: [],
-  testResult: []
+  assessmentStatements: [],
+  assessmentResult: []
   }, {
       toObject: {
         virtuals: true

@@ -1,4 +1,4 @@
-var ResultModel = require('../models/assessmentResult.js');
+var ResultModel = require('../models/result.js');
 let ObjectiveModel = require('../models/objective.js');
 let GameModel = require('../models/game.js');
 var Response = require('../utils/response');
@@ -10,15 +10,15 @@ function AssessGame () {
 AssessGame.prototype.retrieveAssessment = function (properties) {
   let {gameID, objectiveID} = properties;
 
-  console.log("Pulling assessment statements from Objective " + objectiveID);
+  console.log("Pulling assessment statements from Game Objective " + objectiveID);
   ObjectiveModel.findOne(
     {objectiveID},function output (err, result){
       if(err){
         return err;
       } else {
         //console.log(result.testcases)
-        testStatements=result.testcases
-        //console.log(testStatements[0])
+        assessmentStatements=result.testcases
+        //console.log(assessmentStatements[0])
 
 // SAVING document for the first time, might need to make this part of a dedicated Save feature
         //let newResult = ResultModel ({gameID: 125, objectiveID: objectiveID});
@@ -27,7 +27,7 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
 
         return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
-          {$set: {testStatements, testResult: [],rawString: "test1"}}, {upsert: true}
+          {$set: {assessmentStatements, assessmentResult: [],rawString: "test1"}}, {upsert: true}
         ).then ((data) => {
           return ('Objective collection updated');})
           .catch ((err) => {
@@ -38,11 +38,11 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
   )
 }
 
-AssessGame.prototype.evaluateGame = function (properties) {
+AssessGame.prototype.loadingGameIntoAssessmentResult = function (properties) {
   let {gameID, objectiveID} = properties;
-  let evaluationCriterias = []
+  console.log("Loading Game " + gameID + " into Assessment");
   GameModel.findOne(
-    {gameID},function output (err, result) {
+    {gameID}, function output(err, result) {
       if (err) {
         return err;
       } else {
@@ -51,39 +51,43 @@ AssessGame.prototype.evaluateGame = function (properties) {
         return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
           {$set: {currentGame: result.sprites}}, {upsert: true}
-        ).then ((data) => {
-          return ('Latest game ' + gameID + ' is ready to be evaluated');})
-          .catch ((err) => {
+        ).then((data) => {
+          return ('Latest game ' + gameID + ' is ready to be evaluated');
+        })
+          .catch((err) => {
             return ("err");
           });
       }
     });
+}
 
-  console.log("Producing evaluation result for game " + gameID);
+AssessGame.prototype.assessLoadedGame = function (properties) {
+  let {gameID, objectiveID} = properties;
+  let assessmentCriteria = []
+  console.log("Producing assessment Result for Game " + gameID);
   ResultModel.findOne(
     {objectiveID},function output (err, result){
       if(err){
         return err;
       } else {
-        evaluationCriterias=result.testStatements
+        assessmentCriteria=result.assessmentStatements
         currGame=JSON.stringify(result.currentGame)
         var resultStatementArray = []
         // Evaluate every test Statement
-        for (statementID=0; statementID<evaluationCriterias.length; statementID++) {
+        for (statementID=0; statementID<assessmentCriteria.length; statementID++) {
 
-          if (evaluationCriterias[statementID].matcherBlockType = "matcher_be_present") {
-            console.log("Looking for block type ", evaluationCriterias[statementID].actualBlockDescription)
+          if (assessmentCriteria[statementID].matcherBlockType = "matcher_be_present") {
+            console.log("Looking for block type ", assessmentCriteria[statementID].actualBlockDescription)
 
-            if(evaluationCriterias[statementID].actualBlockDescription == "Parallelization") {
-              if (currGame.includes("whenGreenFlag")) {
-
+            if(assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
+              if (currGame.includes("whenGreenFlagaa")) {
                 resultStatementArray.push({"pass": true, "description": "Application should have parallelization",
                   "actions": null});
                 //insertTestResult(gameID, objectiveID, resultStatementArray)
                 return ResultModel.findOneAndUpdate(
                   {objectiveID, gameID},
                   //{$set: {rawString: "aaaab"}}, {upsert: true}
-                  {$addToSet: {testResult: resultStatementArray}}, {upsert: true}
+                  {$addToSet: {assessmentResult: resultStatementArray}}, {upsert: true}
                 ).then ((data) => {
                   return ('Result recorded');})
                   .catch ((err) => {
@@ -91,18 +95,19 @@ AssessGame.prototype.evaluateGame = function (properties) {
                   });
               }
               else {
-                resultStatementArray.push({"pass": false, "description": "Application should have parallelization",
+                resultStatementArray=({"pass": false, "description": "Application should have parallelization",
                   "actions": null});
-                //insertTestResult(gameID, objectiveID, resultStatementArray)
-                return ResultModel.findOneAndUpdate(
+                console.log(resultStatementArray)
+                insertTestResult(gameID, objectiveID, resultStatementArray)
+/*                return ResultModel.findOneAndUpdate(
                   {objectiveID, gameID},
                   //{$set: {rawString: "aaaab"}}, {upsert: true}
-                  {$addToSet: {testResult: resultStatementArray}}, {upsert: true}
+                  {$addToSet: {assessmentResult: resultStatementArray}}, {upsert: true}
                 ).then ((data) => {
                   return ('Result recorded');})
                   .catch ((err) => {
                     return ("err");
-                  });
+                  });*/
               }
             }
           }
@@ -110,16 +115,18 @@ AssessGame.prototype.evaluateGame = function (properties) {
       }
     }
   )
-  return evaluationCriterias
-
-
+  return assessmentCriteria
 }
 
-let insertTestResult = function (gameID, objectiveID, resultstmt) {
+var insertTestResult = function (gameID, objectiveID, resultstmt) {
+  console.log("In insert Test "+ gameID + " obj: " + objectiveID + JSON.stringify(resultstmt))
+  var r = []
+  r.push = JSON.stringify(resultstmt)
   return ResultModel.findOneAndUpdate(
     {objectiveID, gameID},
-    //{$set: {rawString: "aaaa"}}, {upsert: true}
-    {$addToSet: {testResult: resultstmt}}, {upsert: true}
+    {$set: {rawString: "aaaabbbcc"}}, {upsert: true}
+    //{$addToSet: {testResult: r}}, {upsert: true}
+    //{$set: {testResult: []}}, {upsert: true}
   ).then ((data) => {
     return ('Result recorded');})
     .catch ((err) => {

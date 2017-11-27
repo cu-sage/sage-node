@@ -81,12 +81,14 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 
             if(assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
               if (currGame.includes("whenGreenFlag")) {
+                console.log("Pass Parallelization test")
                 resultStatement=({"pass": true, "description": "Game should have parallelization","actions": null});
-                insertTestResult(gameID, objectiveID, resultStatement)
+                console.log(insertTestResult(gameID, objectiveID, resultStatement));
               }
               else {
+                console.log("Failed Parallelization test")
                 resultStatement=({"pass": false, "description": "Game should have parallelization","actions": null});
-                insertTestResult(gameID, objectiveID, resultStatement)
+                console.log(insertTestResult(gameID, objectiveID, resultStatement));
               }
             }
           }

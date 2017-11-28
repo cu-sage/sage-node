@@ -3,6 +3,7 @@ let ObjectiveModel = require('../models/objective.js');
 let GameModel = require('../models/game.js');
 var Response = require('../utils/response');
 var ObjectId = require('mongoose').Types.ObjectId;
+var traverse = require('traverse');
 
 function AssessGame () {
 }
@@ -75,11 +76,16 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 
         // Evaluate every test Statement
         for (statementID=0; statementID<assessmentCriteria.length; statementID++) {
-
-          if (assessmentCriteria[statementID].matcherBlockType = "matcher_be_present") {
+          // Performing block type tests
+          if (assessmentCriteria[statementID].matcherBlockType == "matcher_be_present") {
             console.log("Looking for block type ", assessmentCriteria[statementID].actualBlockDescription)
 
-            if(assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
+            testParallelization(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+
+            if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_sprite")) {
+              testSpriteExist(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            }
+/*            if(assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
               if (currGame.includes("whenGreenFlag")) {
                 console.log("Pass Parallelization test")
                 resultStatement=({"pass": true, "description": "Game should have parallelization","actions": null});
@@ -90,7 +96,7 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
                 resultStatement=({"pass": false, "description": "Game should have parallelization","actions": null});
                 console.log(insertTestResult(gameID, objectiveID, resultStatement));
               }
-            }
+            }*/
           }
         }
       }
@@ -111,5 +117,60 @@ var insertTestResult = function (gameID, objectiveID, resultstmt) {
     .catch ((err) => {
       return ("err");
     });
+}
+
+
+//Parallelization Test
+var testParallelization = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
+  if (assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
+    if (currGame.includes("whenGreenFlag")) {
+      console.log("Pass Parallelization test")
+      resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
+      console.log(insertTestResult(gameID, objectiveID, resultStatement));
+    }
+    else {
+      console.log("Failed Parallelization test")
+      resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
+      console.log(insertTestResult(gameID, objectiveID, resultStatement));
+    }
+  }
+}
+
+//Sprite Exist Test
+var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
+  keySprite = assessmentCriteria[statementID].actualBlockDescription
+  //console.log(currGame)
+  if (currGame.includes(keySprite)) {
+    console.log("Pass Sprite test")
+    //resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
+    //console.log(insertTestResult(gameID, objectiveID, resultStatement));
+  }
+  else {
+    console.log("Failed Sprite test")
+    //resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
+    //console.log(insertTestResult(gameID, objectiveID, resultStatement));
+  }
+
+  console.log(currGame=JSON.parse(JSON.stringify(currGame)))
+  console.log(currGame[1].objectName)
+  console.log(Object.keys(currGame.length))
+  //console.log(currGame, Object.keys(currGame.length))
+/*
+  for (var i = 1, l = Object.keys(currGame).length; i <= l; i++) {
+    console.log(l)
+  }*/
+
+/*  traverse(currGame).forEach( function (x) {
+    console.log(x)
+  })*/
+
+/*  for (i=0; i<currGame.length; i++) {
+    if (keySprite == currGame[i].objName) {
+      console.log("found "+keySprite)
+    } else {
+      console.log("Are you forgetting something round?")
+    }
+  }*/
+
 }
 module.exports = new AssessGame();

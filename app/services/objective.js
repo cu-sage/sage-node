@@ -73,18 +73,32 @@ Objective.prototype.submitVALEObjective = function (properties) {
         actionBlockType = null
         actionBlockName = null
         if (blocks.next){
-          //processBlock(blocks.next.block)
+
           triggerBlockType = blocks.next.block.$['type']
           actionBlockType = blocks.next.block.value.block.$['type']
           actionBlockName = blocks.next.block.value.block.field._
+          assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType, triggerBlockType, actionBlockType,actionBlockName}
+          testcasearray.push(assessmentStatement)
+          processNextBlock(blocks.next.block,testcasearray,actualBlockType,actualBlockDescription,assertBlockType,matcherBlockType)
+          return testcasearray
         }
 
         assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType, triggerBlockType, actionBlockType,actionBlockName}
         testcasearray.push(assessmentStatement)
-        //console.log("Recursive " + testcasearray)
         return testcasearray
-        //console.log("Recursive " + JSON.stringify(assessmentStatement))
     }
+  }
+
+  function processNextBlock(nextblock,testcasearray,actualBlockType,actualBlockDescription,assertBlockType,matcherBlockType){
+      if (nextblock.next){
+        console.log("in next block" + nextblock.value.block.field._)
+        triggerBlockType = nextblock.next.block.$['type']
+        actionBlockType = nextblock.next.block.value.block.$['type']
+        actionBlockName = nextblock.next.block.value.block.field._
+        assessmentStatement = {actualBlockType, actualBlockDescription, assertBlockType, matcherBlockType, triggerBlockType, actionBlockType,actionBlockName}
+        testcasearray.push(assessmentStatement)
+        processNextBlock(nextblock.next.block,testcasearray,actualBlockType,actualBlockDescription,assertBlockType,matcherBlockType)
+      }
   }
   let {objectiveID, objectiveXML} = properties;
   console.log("Processing objective for " + objectiveID);

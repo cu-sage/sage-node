@@ -1,0 +1,326 @@
+<xml xmlns="http://www.w3.org/1999/xhtml"><block type="expect" id=",!jjz0cm)5Q7#Okhds`]" x="88" y="-262">
+<value name="NAME">
+<block type="actual_block_type" id="H?ZUEBbsp=.7tPX*tmCU">
+<field name="NAME">Parallelization</field>
+<value name="assert">
+<block type="assert_should" id="{*=P.@?%9RXS1wFAR8]p">
+<value name="matcher">
+<block type="matcher_be_present" id="A^jD7kN|H@fD|-}P}pX["></block>
+</value>
+</block>
+</value>
+</block>
+</value>
+</block>
+<block type="expect" id="OCO3mE+Qta|2ez5nmfY1" x="88" y="-212">
+<value name="NAME">
+<block type="actual_block_type" id="I-C1/~G7=M?kfeo^]1.6">
+<field name="NAME">Sensing</field>
+<value name="assert">
+<block type="assert_should" id="T^0.fSVHgb5?U_tnjthg">
+<value name="matcher">
+<block type="matcher_be_present" id="C2BZNZ8V@1%G~9g8cO%C"></block>
+</value>
+</block>
+</value>
+</block>
+</value>
+</block>
+<block type="expect" id="qvimp()mj;YWK[!m6IPP" x="88" y="-162">
+<value name="NAME">
+<block type="actual_block" id="f[LcSGNKL:rlyLXfX#Bh">
+<field name="NAME">doIf</field>
+<value name="assert">
+<block type="assert_should" id="X*K~Of,1qb[mT4F9m(!M">
+<value name="matcher">
+<block type="matcher_be_present" id="qe=m%f5T4rq+VyR(IYTM"></block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_pass" id="=4]wsqTQv,qyMWm`B14n">
+<value name="action">
+<block type="action_block_include" id=",E|t/kZKbTb+!~^L;Ziy">
+<field name="block_name">forever</field>
+</block>
+</value>
+<next>
+<block type="trigger_pass" id="s5dgCL-1HKL%BUvHR2u;">
+<value name="action">
+<block type="action_block_include" id="kGB{2.N5gPyA[|}|r@+1">
+<field name="block_name">repeat until %b</field>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="a-rVbeXJdlpUY:S4(gB_">
+<value name="action">
+<block type="action_block_exclude" id="Qas/#2ms{-Ij-Uk#cm.|">
+<field name="block_name">forever</field>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="2#,zwJ{EOE*rCPTQ(/P!">
+<value name="action">
+<block type="action_block_exclude" id="Fm#YFZv2_D}}EKT9zirR">
+<field name="block_name">repeat until %b</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+<block type="expect" id="A.Re_Lc4!}U~=f}UEYpG" x="88" y="13">
+<value name="NAME">
+<block type="actual_sprite" id="{XGT_w?!inG55-S/MkF_">
+<field name="NAME">Ball</field>
+<value name="actual">
+<block type="assert_should" id="~3KT]8a:hc)s,BMPY{Zg">
+<value name="matcher">
+<block type="matcher_be_present" id="^1pLJzKBX3BDb_NmY%D{"></block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_pass" id=")PV5s}R#eJ/7Zrlrr*J0">
+<value name="action">
+<block type="action_say" id="!mUfl~7uil/RmZ6a!VgN">
+<field name="say_text">Nice looking ball!</field>
+</block>
+</value>
+<next>
+<block type="trigger_pass" id="},!O_)T#ubjWZebl-FwE">
+<value name="action">
+<block type="action_block_include" id="l#!6+`NO;!I8xTp{bCo.">
+<field name="block_name">point in direction %d.direction</field>
+</block>
+</value>
+<next>
+<block type="trigger_pass" id="*G,]fIXP[;1@GySk|GdW">
+<value name="action">
+<block type="action_block_include" id="{}hf-[eZIkf+X@(.LpTk">
+<field name="block_name">when %m.key key pressed</field>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="xvXj|?rGPca!z*iwb:!U">
+<value name="action">
+<block type="action_say" id="`(*rys7Pi6BcxW^.1A7X">
+<field name="say_text">Forgetting something round?</field>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="ij0w*g{Q8y,ZkHmd`hXl">
+<value name="action">
+<block type="action_block_exclude" id="l4GC;#1ZVNXx}c@Qt^Vi">
+<field name="block_name">point in direction %d.direction</field>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="1@^7W`7x7babY2mLWnrj">
+<value name="action">
+  <block type="action_block_exclude" id="^n9EBBImWzn1/y.90smP">
+    <field name="block_name">when %m.key key pressed</field>
+  </block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+<block type="expect" id=".b]WZYWLMzX2{U_w?;]U" x="87" y="238">
+<value name="NAME">
+<block type="actual_sprite" id="]|IQS;,P{qiiE%enA[*1">
+<field name="NAME">Goal</field>
+<value name="actual">
+<block type="assert_should" id=",q[i_LymJc5brM!Z[J`;">
+<value name="matcher">
+<block type="matcher_be_present" id="babgDZ}rh/8J_.--oXb9"></block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="NOs=+{NymCb52GNP)rm*">
+<value name="action">
+<block type="action_say" id="-?,::k90bxn;woW`NsNT">
+<field name="say_text">How will someone playing your game win?</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="Ti]BH0au4CGXM%/E*u}`" x="88" y="313">
+<value name="NAME">
+<block type="actual_key_pressed" id="[kUP%qs2;ILpBTp(mB}U">
+<field name="key_pressed">w</field>
+<field name="key_sprite">Ball</field>
+<value name="assert">
+<block type="assert_should" id="`8=B]/1ORdnRP:~;q](L">
+<value name="matcher">
+<block type="matcher_point_direction" id="BYLJ/ShP*;%lvJ4uErow">
+<field name="direction">direction_up</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="QnQaJ9xtmcW}(?w6]lvM">
+<value name="action">
+<block type="action_say" id="r/2`nD:?X^QON4A4nVHV">
+<field name="say_text">Don't forget! Pressing 'w' should turn have the ball point up!</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="=F#aw[=s^[5umi2{+:|H" x="88" y="388">
+<value name="NAME">
+<block type="actual_key_pressed" id="ws6=qSj]5[++THO%b3a,">
+<field name="key_pressed">a</field>
+<field name="key_sprite">Ball</field>
+<value name="assert">
+<block type="assert_should" id="/f]Ba|O3TldQ0`Zf,Cv%">
+<value name="matcher">
+<block type="matcher_point_direction" id="QAV@KnI|8jUoZSOSb^~1">
+<field name="direction">direction_left</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="lUfF]8v79{K`%/[boDWJ">
+<value name="action">
+<block type="action_say" id="+WpQ}[WozQC%~}mubB3h">
+<field name="say_text">Don't forget! Pressing 'a' should turn have the ball point left!</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="fya~}z|%`=|;}gtWClzK" x="88" y="463">
+<value name="NAME">
+<block type="actual_key_pressed" id="!HT:WTQ+A(T,e]z*X0_a">
+<field name="key_pressed">s</field>
+<field name="key_sprite">Ball</field>
+<value name="assert">
+<block type="assert_should" id="*n.S3?g,QK[g%[m-Dt#n">
+<value name="matcher">
+<block type="matcher_point_direction" id="o%/FxOU,fT6ge6vaTJbX">
+<field name="direction">direction_down</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="dQRylz5mIPUkU#%n-_Ex">
+<value name="action">
+<block type="action_say" id="MWBZ:DEr+;IpB*Bhl@U3">
+<field name="say_text">Don't forget! Pressing 's' should turn have the ball point down!</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="^cVdX#=`Nr`[NAspwl`h" x="88" y="538">
+<value name="NAME">
+<block type="actual_key_pressed" id="X{MhX`Abh34t*SZW;Y??">
+<field name="key_pressed">d</field>
+<field name="key_sprite">Ball</field>
+<value name="assert">
+<block type="assert_should" id=".T=tl+@Q(H%oB6z%0Xu3">
+<value name="matcher">
+<block type="matcher_point_direction" id="08kd5]2@rS:|sRWf4~B:">
+<field name="direction">direction_right</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="O77{|3:7eqjnJ3[_*W.{">
+<value name="action">
+<block type="action_say" id="#jZN:,/Y4p)X.tpuif]S">
+<field name="say_text">Don't forget! Pressing 'd' should turn have the ball point right!</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="CQ?bk~5u_4sHl=Bc`^#D" x="88" y="613">
+<value name="NAME">
+<block type="actual_sprite_touch_color" id="kBM~+wo|sHfT^O~9)S:T">
+<field name="key_sprite">Ball</field>
+<field name="color">red</field>
+<value name="assert">
+<block type="assert_should_not" id="?y/SRqBkzwP{d%gVE@]c">
+<value name="matcher">
+<block type="matcher_move_steps" id="c7O/nc,HwNTI@EO-Cj6D">
+<field name="move_step_count">1</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id="LE5M=X3~iyAs2.NBWPAO">
+<value name="action">
+<block type="action_say" id="~S_Hy__z~GX88nsUP#p(">
+<field name="say_text">Oops! Ball should bounce off of maze...</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+<block type="expect" id="oqGtM2TA]8W]X7s2!gXh" x="88" y="688">
+<value name="NAME">
+<block type="actual_sprite_touch_sprite" id="A+=LKZHoe/M8tvdyJ=P:">
+<field name="key_sprite_1">Ball</field>
+<field name="key_sprite_2">Goal</field>
+<value name="assert">
+<block type="assert_should" id="}SIXX0MVoL@I}/X@L5N7">
+<value name="matcher">
+<block type="matcher_say" id="Z/kUq;bSUHdbF:mQ:lkq">
+<field name="say_what">You win!</field>
+</block>
+</value>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="trigger_fail" id=":70JPSqYAL[bl-:tKp)?">
+<value name="action">
+<block type="action_say" id="t(zz0(OEM]ag[(-AJNrs">
+<field name="say_text">Don't forget to celebrate when you get to the finish line!</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</xml>

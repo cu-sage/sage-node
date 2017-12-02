@@ -77,35 +77,15 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
         // Evaluate every test Statement
         for (statementID=0; statementID<assessmentCriteria.length; statementID++) {
           if (assessmentCriteria[statementID].matcherBlockType == "matcher_be_present") {
-            //console.log("Looking for block type ", assessmentCriteria[statementID].actualBlockDescription)
-
-            if (assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
-              testParallelization(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            if (assessmentCriteria[statementID].actualBlockType == "actual_block_type") {
+              testBlockType(gameID, objectiveID, assessmentCriteria, statementID, currGame);
             }
-
-            if (assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
-              testSensing(gameID, objectiveID, assessmentCriteria, statementID, currGame);
-            }
-
-            if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_sprite")) {
+            else if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_sprite")) {
               testSpriteExist(gameID, objectiveID, assessmentCriteria, statementID, currGame);
             }
-
-            if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_block")) {
+            else if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_block")) {
               testBlockExist(gameID, objectiveID, assessmentCriteria, statementID, currGame);
             }
-/*            if(assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
-              if (currGame.includes("whenGreenFlag")) {
-                console.log("Pass Parallelization test")
-                resultStatement=({"pass": true, "description": "Game should have parallelization","actions": null});
-                console.log(insertTestResult(gameID, objectiveID, resultStatement));
-              }
-              else {
-                console.log("Failed Parallelization test")
-                resultStatement=({"pass": false, "description": "Game should have parallelization","actions": null});
-                console.log(insertTestResult(gameID, objectiveID, resultStatement));
-              }
-            }*/
           }
         }
       }
@@ -115,7 +95,6 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 }
 
 var insertTestResult = function (gameID, objectiveID, resultstmt) {
-
   return ResultModel.findOneAndUpdate(
     {objectiveID, gameID},
     //{$set: {rawString: "aaaabbbcc"}}, {upsert: true}
@@ -129,29 +108,28 @@ var insertTestResult = function (gameID, objectiveID, resultstmt) {
 }
 
 //Actual Block Type Test
-var testParallelization = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
-  if (currGame.includes("whenGreenFlag")) {
-    console.log("Passed Parallelization test")
-    resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
-    insertTestResult(gameID, objectiveID, resultStatement)
-  }
-  else {
-    console.log("Failed Parallelization test")
-    resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
-    insertTestResult(gameID, objectiveID, resultStatement)
-  }
-}
-
-var testSensing = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
+var testBlockType = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
   if (assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
     if (currGame.includes("whenGreenFlag")) {
-      console.log("Passed Sensing test")
+      console.log("Passed Parallelization test")
       resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
       insertTestResult(gameID, objectiveID, resultStatement)
     }
     else {
-      console.log("Failed Sensing test")
+      console.log("Failed Parallelization test")
       resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
+      insertTestResult(gameID, objectiveID, resultStatement)
+    }
+  }
+  else if (assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
+    if (currGame.includes("Sensing")) {
+      console.log("Passed Sensing test")
+      resultStatement = ({"pass": true, "description": "Game should have Sensing", "actions": null});
+      insertTestResult(gameID, objectiveID, resultStatement)
+    }
+    else {
+      console.log("Failed Sensing test")
+      resultStatement = ({"pass": false, "description": "Game should have Sensing", "actions": null});
       insertTestResult(gameID, objectiveID, resultStatement)
     }
   }
@@ -162,7 +140,6 @@ var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, stateme
   keySprite = assessmentCriteria[statementID].actualBlockDescription
   testSpriteResult = "Block Type " + keySprite + " should be present"
   if (currGame.includes(keySprite)) {
-
     console.log(testSpriteResult + ":Passed")
     resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
     insertTestResult(gameID, objectiveID, resultStatement)
@@ -194,7 +171,6 @@ var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, stateme
   }*/
 
 }
-
 //block Exist Test
 var testBlockExist = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
   keyBlock = assessmentCriteria[statementID].actualBlockDescription
@@ -203,7 +179,11 @@ var testBlockExist = function (gameID, objectiveID, assessmentCriteria, statemen
 
   if (currGame.includes(keyBlock)) {
     console.log(testSpriteResult + ":Passed")
-    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    actions = null
+    if (assessmentCriteria[statementID].triggerBlockType != null) {
+      actionStmt = {"type": "action_block_include","command": "forever"}
+    }
+    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement);
   }
   else {

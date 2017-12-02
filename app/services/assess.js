@@ -76,14 +76,23 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 
         // Evaluate every test Statement
         for (statementID=0; statementID<assessmentCriteria.length; statementID++) {
-          // Performing block type tests
           if (assessmentCriteria[statementID].matcherBlockType == "matcher_be_present") {
-            console.log("Looking for block type ", assessmentCriteria[statementID].actualBlockDescription)
+            //console.log("Looking for block type ", assessmentCriteria[statementID].actualBlockDescription)
 
-            testParallelization(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            if (assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
+              testParallelization(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            }
+
+            if (assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
+              testSensing(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            }
 
             if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_sprite")) {
               testSpriteExist(gameID, objectiveID, assessmentCriteria, statementID, currGame);
+            }
+
+            if ((assessmentCriteria[statementID].assertBlockType == "assert_should") && (assessmentCriteria[statementID].actualBlockType == "actual_block")) {
+              testBlockExist(gameID, objectiveID, assessmentCriteria, statementID, currGame);
             }
 /*            if(assessmentCriteria[statementID].actualBlockDescription == "Sensing") {
               if (currGame.includes("whenGreenFlag")) {
@@ -119,19 +128,31 @@ var insertTestResult = function (gameID, objectiveID, resultstmt) {
     });
 }
 
-
-//Parallelization Test
+//Actual Block Type Test
 var testParallelization = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
+  if (currGame.includes("whenGreenFlag")) {
+    console.log("Passed Parallelization test")
+    resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement)
+  }
+  else {
+    console.log("Failed Parallelization test")
+    resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement)
+  }
+}
+
+var testSensing = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
   if (assessmentCriteria[statementID].actualBlockDescription == "Parallelization") {
     if (currGame.includes("whenGreenFlag")) {
-      console.log("Pass Parallelization test")
+      console.log("Passed Sensing test")
       resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
-      console.log(insertTestResult(gameID, objectiveID, resultStatement));
+      insertTestResult(gameID, objectiveID, resultStatement)
     }
     else {
-      console.log("Failed Parallelization test")
+      console.log("Failed Sensing test")
       resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
-      console.log(insertTestResult(gameID, objectiveID, resultStatement));
+      insertTestResult(gameID, objectiveID, resultStatement)
     }
   }
 }
@@ -139,21 +160,21 @@ var testParallelization = function (gameID, objectiveID, assessmentCriteria, sta
 //Sprite Exist Test
 var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
   keySprite = assessmentCriteria[statementID].actualBlockDescription
-  //console.log(currGame)
+  testSpriteResult = "Block Type " + keySprite + " should be present"
   if (currGame.includes(keySprite)) {
-    console.log("Pass Sprite test")
-    //resultStatement = ({"pass": true, "description": "Game should have parallelization", "actions": null});
-    //console.log(insertTestResult(gameID, objectiveID, resultStatement));
+
+    console.log(testSpriteResult + ":Passed")
+    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement)
   }
   else {
-    console.log("Failed Sprite test")
-    //resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": null});
-    //console.log(insertTestResult(gameID, objectiveID, resultStatement));
+    console.log(testSpriteResult + ":Failed")
+    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement)
   }
-
-  console.log(currGame=JSON.parse(JSON.stringify(currGame)))
-  console.log(currGame[1].objectName)
-  console.log(Object.keys(currGame.length))
+  //console.log(currGame=JSON.parse(JSON.stringify(currGame)))
+  //console.log(currGame[1].objectName)
+  //console.log(Object.keys(currGame.length))
   //console.log(currGame, Object.keys(currGame.length))
 /*
   for (var i = 1, l = Object.keys(currGame).length; i <= l; i++) {
@@ -172,5 +193,27 @@ var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, stateme
     }
   }*/
 
+}
+
+//block Exist Test
+var testBlockExist = function (gameID, objectiveID, assessmentCriteria, statementID, currGame) {
+  keyBlock = assessmentCriteria[statementID].actualBlockDescription
+  //console.log(currGame)
+  testSpriteResult = "Block " + keyBlock + " should be present"
+
+  if (currGame.includes(keyBlock)) {
+    console.log(testSpriteResult + ":Passed")
+    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement);
+  }
+  else {
+    console.log(testSpriteResult + ":Failed")
+    resultStatement = ({"pass": false, "description": testSpriteResult, "actions": null});
+    insertTestResult(gameID, objectiveID, resultStatement);
+  }
+
+  if (keyBlock == "doIf" && assessmentCriteria[statementID].triggerBlockType == "trigger_pass"){
+    resultStatementAction =({"pass": false, "description": testSpriteResult, "actions": null})
+  }
 }
 module.exports = new AssessGame();

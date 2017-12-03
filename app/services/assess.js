@@ -65,6 +65,7 @@ AssessGame.prototype.loadingGameIntoAssessmentResult = function (properties) {
 AssessGame.prototype.assessLoadedGame = function (properties) {
   let {gameID, objectiveID} = properties;
   let assessmentCriteria = []
+
   console.log("Producing assessment Result for Game " + gameID);
   ResultModel.findOne(
     {objectiveID},function output (err, result){
@@ -141,12 +142,22 @@ var testSpriteExist = function (gameID, objectiveID, assessmentCriteria, stateme
   testSpriteResult = "Block Type " + keySprite + " should be present"
   if (currGame.includes(keySprite)) {
     console.log(testSpriteResult + ":Passed")
-    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    if (assessmentCriteria[statementID].triggerBlockType == "trigger_pass") {
+      actionStmt = {"type": assessmentCriteria[statementID].actionBlockType,"command": assessmentCriteria[statementID].actionBlockName}
+    }else if (assessmentCriteria[statementID].triggerBlockType == null) {
+      actionStmt = null
+    }
+    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement)
   }
   else {
     console.log(testSpriteResult + ":Failed")
-    resultStatement = ({"pass": true, "description": testSpriteResult, "actions": null});
+    if (assessmentCriteria[statementID].triggerBlockType == "trigger_fail") {
+      actionStmt = {"type": assessmentCriteria[statementID].actionBlockType,"command": assessmentCriteria[statementID].actionBlockName}
+    }else if (assessmentCriteria[statementID].triggerBlockType == null) {
+      actionStmt = null
+    }
+    resultStatement = ({"pass": false, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement)
   }
   //console.log(currGame=JSON.parse(JSON.stringify(currGame)))
@@ -179,16 +190,23 @@ var testBlockExist = function (gameID, objectiveID, assessmentCriteria, statemen
 
   if (currGame.includes(keyBlock)) {
     console.log(testSpriteResult + ":Passed")
-    actions = null
-    if (assessmentCriteria[statementID].triggerBlockType != null) {
-      actionStmt = {"type": "action_block_include","command": "forever"}
+
+    if (assessmentCriteria[statementID].triggerBlockType == "trigger_pass") {
+      actionStmt = {"type": assessmentCriteria[statementID].actionBlockType,"command": assessmentCriteria[statementID].actionBlockName}
+    }else if (assessmentCriteria[statementID].triggerBlockType == null) {
+      actionStmt = null
     }
     resultStatement = ({"pass": true, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement);
   }
   else {
     console.log(testSpriteResult + ":Failed")
-    resultStatement = ({"pass": false, "description": testSpriteResult, "actions": null});
+    if (assessmentCriteria[statementID].triggerBlockType == "trigger_fail") {
+      actionStmt = {"type": assessmentCriteria[statementID].actionBlockType,"command": assessmentCriteria[statementID].actionBlockName}
+    } else if (assessmentCriteria[statementID].triggerBlockType == null) {
+      actionStmt = null
+    }
+    resultStatement = ({"pass": false, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement);
   }
 

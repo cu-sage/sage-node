@@ -15,12 +15,15 @@ AssessGameController.assessGameAgainstObjective = (req, res, next) => {
     gameID: req.params.gameID, objectiveID: req.params.objectiveID
   };
 
+  var criteria=[]
   console.log("Start Assessment");
   assessGameService.retrieveAssessment(properties)
   assessGameService.loadingGameIntoAssessmentResult(properties)
   assessGameService.assessLoadedGame(properties)
-  console.log("Assessment completed")
-  res.send("Assessment completed")
+    .then((progresses) => res.send(progresses))
+    .catch ((err) => next (err));
+
+  console.log("Assessment Completed")
 };
 
 module.exports = AssessGameController;

@@ -66,12 +66,11 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
   let {gameID, objectiveID} = properties;
   let assessmentCriteria = []
 
+
   console.log("Producing assessment Result for Game " + gameID);
-  ResultModel.findOne(
+  return ResultModel.findOne(
     {objectiveID},function output (err, result){
-      if(err){
-        return err;
-      } else {
+
         assessmentCriteria=result.assessmentStatements
         currGame=JSON.stringify(result.currentGame)
 
@@ -90,9 +89,14 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
           }
         }
       }
-    }
   )
-  return assessmentCriteria
+    //return result.assessmentResult
+    .then ((assess) => {
+      return Promise.resolve ({assess});
+    })
+    .catch ((err) => {
+      return Promise.reject (err);
+    });
 }
 
 var insertTestResult = function (gameID, objectiveID, resultstmt) {
@@ -208,10 +212,6 @@ var testBlockExist = function (gameID, objectiveID, assessmentCriteria, statemen
     }
     resultStatement = ({"pass": false, "description": testSpriteResult, "actions": actionStmt});
     insertTestResult(gameID, objectiveID, resultStatement);
-  }
-
-  if (keyBlock == "doIf" && assessmentCriteria[statementID].triggerBlockType == "trigger_pass"){
-    resultStatementAction =({"pass": false, "description": testSpriteResult, "actions": null})
   }
 }
 module.exports = new AssessGame();

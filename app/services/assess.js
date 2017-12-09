@@ -12,7 +12,7 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
   let {gameID, objectiveID} = properties;
 
   console.log("Pulling assessment statements from Game Objective " + objectiveID);
-  ObjectiveModel.findOne(
+  return ObjectiveModel.findOne(
     {objectiveID},function output (err, result){
       if(err){
         return err;
@@ -22,10 +22,6 @@ AssessGame.prototype.retrieveAssessment = function (properties) {
         //console.log(assessmentStatements[0])
 
 // SAVING document for the first time, might need to make this part of a dedicated Save feature
-        //let newResult = ResultModel ({gameID: 125, objectiveID: objectiveID});
-/*        let newResult = ResultModel ({gameID: gameID, objectiveID: objectiveID , rawString: "test2"});
-        newResult.save();*/
-
         return ResultModel.findOneAndUpdate(
           {objectiveID, gameID},
           {$set: {assessmentStatements, assessmentResult: [],rawString: ""}}, {upsert: true}
@@ -66,7 +62,6 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
   let {gameID, objectiveID} = properties;
   let assessmentCriteria = []
 
-
   console.log("Producing assessment Result for Game " + gameID);
   return ResultModel.findOne(
     {objectiveID},function output (err, result){
@@ -105,10 +100,11 @@ var insertTestResult = function (gameID, objectiveID, resultstmt) {
     //{$set: {rawString: "aaaabbbcc"}}, {upsert: true}
     {$addToSet: {assessmentResult: resultstmt}}, {upsert: true}
     //{$set: {testResult: []}}, {upsert: true}
-  ).then ((data) => {
-    return ('Result recorded');})
+  ).then ((assess) => {
+    return Promise.resolve ({assess});
+  })
     .catch ((err) => {
-      return ("err");
+      return Promise.reject (err);
     });
 }
 

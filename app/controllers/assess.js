@@ -17,11 +17,11 @@ AssessGameController.assessGameAgainstObjective = (req, res, next) => {
 
   var criteria=[]
   console.log("Start Assessment");
-  assessGameService.retrieveAssessment(properties)
-  assessGameService.loadingGameIntoAssessmentResult(properties)
-  assessGameService.assessLoadedGame(properties)
-    .then((progresses) => res.send(progresses))
-    .catch ((err) => next (err));
+  assessGameService.retrieveAssessment(properties).then((returnValue)=>
+    assessGameService.loadingGameIntoAssessmentResult(properties)).then((returnValue)=>
+      assessGameService.assessLoadedGame(properties))
+        .then((progresses) => res.send(progresses))
+        .catch ((err) => next (err));
 
   console.log("Assessment Completed")
 };

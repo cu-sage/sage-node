@@ -21,7 +21,7 @@ module.exports = function(app, config) {
   app.use(logger('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
   }));
   app.use(bodyParser.text());
   app.use(cookieParser());

@@ -26,20 +26,29 @@ GameController.submitAndProcess = (req, res, next) => {
   let properties = {
     gameID: req.params.gameID, studentID: req.params.studentID, jsonString: req.body, objectiveID: req.params.objectiveID
   };
-  console.log("Parsing Game:"+ req.params.gameID + " for student " + req.params.studentID);
-  for (val of req.body.children) {
-    //console.log(val.objName)
-    let properties = {
-      gameID: req.params.gameID, studentID: req.params.studentID, jsonString: req.body, sprite: val, objectiveID: req.params.objectiveID
-    };
+  //console.log("Parsing Game:"+ req.params.gameID + " for student " + req.params.studentID);
 
-    GameService.submitGame(properties);
+  // Load game into in-memory game structure
+  GameService.refreshGame(properties)
+    //.then((returnValue)=>
+    //GameService.submitSprite(properties).then((game) => res.send("Game " + req.params.gameID + " uploaded")).catch((err) => next(err)))
 
-    //GameService.submitGame(properties).then((game) => res.send("Game " + req.params.gameID + " uploaded")).catch((err) => next(err));
-  }
+  //console.log("from Front-End" + JSON.stringify(req.body))
+
+  /*  console.log(req.body)
+    for (val of req.body.children) {
+      //console.log(val.objName)
+      let properties = {
+        gameID: req.params.gameID, studentID: req.params.studentID, jsonString: req.body, sprite: val, objectiveID: req.params.objectiveID
+      };
+
+      GameService.submitSprite(properties);
+
+      //GameService.submitGame(properties).then((game) => res.send("Game " + req.params.gameID + " uploaded")).catch((err) => next(err));
+    }*/
 
   console.log("Game", req.params.gameID, "uploaded");
-  res.send("Game " + req.params.gameID + " uploaded");
+  //res.send("Game " + req.params.gameID + " uploaded");
 
 };
 

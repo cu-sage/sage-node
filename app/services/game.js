@@ -20,33 +20,64 @@ Game.prototype.refreshGame = function (properties) {
   console.log("refreshing game " + gameID + " for " + studentID)
 
   jsonString = JSON.stringify(jsonString)
-  console.log(jsonString)
+
+  //console.log(jsonString)
+  //Re-formatting information coming in via bodyparser as urlencoder
   jsonGame = jsonString.replace(/\\n/g,"")
   jsonGame = jsonGame.replace(/\\t/g,"")
   jsonGame = jsonGame.replace(/\\"/g,'"')
-  jsonGame = jsonGame.replace(/\\"/g,'"')
   jsonGame = jsonGame.replace(/":"/g,'=')
-  jsonGame = jsonGame.substr(2).slice(0,-2)/*
-  console.log("After replace " + jsonGame.objectName)*/
+  jsonGame = jsonGame.substr(2).slice(0,-2)
+
+  //jsonGame = jsonGame.replace(/m./g,'m_')
+  //console.log(jsonGame)
   jsonGame = JSON.parse(jsonGame)
-  console.log(jsonGame)
+  jsonGame.sageBlocks = {}
+  console.log(jsonGame.scripts[0],jsonGame.scripts[1])
   //jsonScripts = JSON.parse(JSON.stringify(jsonGame.scripts))
   //console.log(jsonScripts)
-  return jsonGame
-  //console.log("After replace " + jsonGame.objName)
-
+  jsonArray = []
+  jsonArray.push(jsonGame)
+  return jsonArray
 };
 
-Game.prototype.submitSprite = function (properties) {
+Game.prototype.submitSprite = function (properties, sprite) {
   //console.log(properties);
-  let {gameID, studentID, jsonString, sprite, objectiveID} = properties;
+  let {gameID, studentID, jsonString, objectiveID} = properties;
 
-  console.log("Updating " + sprite.objName + " sprite in game " + gameID)
+  console.log(sprite)
+  console.log("Updating " + sprite[0].objName + " sprite in game " + gameID)
+
+/*  GameModel.findOneAndUpdate(
+    {gameID, studentID},
+    {
+
+       $set: {
+      sprites: sprite}
+    },
+    {upsert:true}
+  )*/
+/*  GameModel.findOneAndUpdate(
+    {gameID, studentID},
+    {
+      $set: {
+        sprites: [],gameJSON: []
+      }/!*,
+       $addToSet: {
+      sprites: sprite/!*, gameJSON: jsonString*!/}*!/
+    },
+    {upsert:true}
+  )*/
+
   return GameModel.findOneAndUpdate(
     {gameID, studentID},
     {
-      $addToSet: {sprites: sprite/*, gameJSON: jsonString*/}
-    },
+      /*$set: {
+      sprites: [],gameJSON: ["hi","hello"]
+      },*/
+      $set: {
+      sprites: sprite}
+      },
     {upsert:true}
   ).then ((game) => {
     return Promise.resolve ({message: 'Updated'});

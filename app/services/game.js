@@ -33,7 +33,8 @@ Game.prototype.refreshGame = function (properties) {
   //console.log(jsonGame)
   jsonGame = JSON.parse(jsonGame)
   jsonGame.sageBlocks = {}
-  console.log(jsonGame.scripts[0],jsonGame.scripts[1])
+  jsonGame.sagePalletes = []
+  //console.log(jsonGame.scripts[0],jsonGame.scripts[1])
   //jsonScripts = JSON.parse(JSON.stringify(jsonGame.scripts))
   //console.log(jsonScripts)
   jsonArray = []
@@ -51,7 +52,6 @@ Game.prototype.submitSprite = function (properties, sprite) {
 /*  GameModel.findOneAndUpdate(
     {gameID, studentID},
     {
-
        $set: {
       sprites: sprite}
     },
@@ -72,11 +72,11 @@ Game.prototype.submitSprite = function (properties, sprite) {
   return GameModel.findOneAndUpdate(
     {gameID, studentID},
     {
-      /*$set: {
-      sprites: [],gameJSON: ["hi","hello"]
+/*      $set: {
+      sprites: [],gameJSON: []
       },*/
       $set: {
-      sprites: sprite}
+      sprites: sprite,gameJSON: []}
       },
     {upsert:true}
   ).then ((game) => {

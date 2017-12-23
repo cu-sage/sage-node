@@ -30,11 +30,10 @@ GameController.submitAndProcess = (req, res, next) => {
 
   // Load game into in-memory game structure
   var gameObject = GameService.refreshGame(properties)
-  GameService.submitSprite(properties,gameObject)
-  //console.log("from Front-End" + JSON.stringify(req.body))
+  GameService.submitSprite(properties,gameObject).then((progresses) => res.send("Game " + req.params.gameID + " uploaded. "))
+    .catch ((err) => next (err));
 
   console.log("Game", req.params.gameID, "uploaded");
-  res.send("Game " + req.params.gameID + " uploaded. ");
 
 };
 

@@ -12,6 +12,7 @@ var GameController = function(app) {
 
   router.get('/:gameID', GameController.fetchGame);
   // Post game from Affinity Space every second
+  router.get('/link/game/:gameID/objective/:objectiveID', GameController.linkGameWithObjective);
   router.post('/student/:studentID/game/:gameID/objective/:objectiveID', upload.single('file'), GameController.submitAndProcess);
   router.post('/students/:studentID/assignments/:assignmentID/results', upload.single('file'), GameController.searchSubmitAndProcess);
   app.use('/games', router);
@@ -20,6 +21,16 @@ var GameController = function(app) {
 GameController.fetchGame = (req, res, next) => {
 	let {gameID} = req.params.gameID;
 	res.send('Current game ID is ' + req.params.gameID + GameService.overview());
+};
+
+GameController.linkGameWithObjective = (req, res, next) => {
+  let properties = {
+    gameID: req.params.gameID, objectiveID: req.params.objectiveID
+  };
+
+  GameService.linkObjective(properties).then((progresses) => res.send("Game " + req.params.gameID + " linked with " + req.params.objectiveID))
+    .catch ((err) => next (err));
+  console.log("Game", req.params.gameID, "linked with ", req.params.objectiveID);
 };
 
 GameController.submitAndProcess = (req, res, next) => {

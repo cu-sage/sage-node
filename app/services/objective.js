@@ -171,7 +171,7 @@ Objective.prototype.submitObjective = function (properties) {
     {objectiveID},
     {
       $set: { objectiveXML: objectiveXML},$addToSet: {testcases: testObjects }
-    }
+    },{upsert:true}
   ).then ((data) => {
     return ('Objective collection updated');})
     .catch ((err) => {

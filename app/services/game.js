@@ -7,8 +7,10 @@ var ObjectId = require('mongoose').Types.ObjectId;
 function Game () {
 }
 
-Game.prototype.fetchGame= function (gameIDs) {
-	return gameIDs;
+
+Game.prototype.fetchGame= function (gameID) {
+  var game = GameModel.findOne({ gameID });
+	return game;
 };
 
 Game.prototype.overview = function () {

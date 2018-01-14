@@ -19,8 +19,9 @@ var GameController = function(app) {
 };
 
 GameController.fetchGame = (req, res, next) => {
-	let {gameID} = req.params.gameID;
-	res.send('Current game ID is ' + req.params.gameID + GameService.overview());
+  GameService.fetchGame(req.params.gameID)
+    .then((game) => res.send(game))
+    .catch((err) => next(err));
 };
 
 GameController.linkGameWithObjective = (req, res, next) => {

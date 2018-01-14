@@ -8,14 +8,20 @@ var storage = multer.diskStorage({
 var upload = multer({ storage });
 
 var ObjectiveController = function(app) {
-
+  router.get('/all', ObjectiveController.fetchAllObjectives);
   router.get('/:objectiveID/result', ObjectiveController.fetchObjective);
   router.post('/post/:objectiveID', ObjectiveController.submitAndProcess);
   router.post('/:objectiveID', ObjectiveController.submitVALEObjective);
   //router.post('/post/:objectiveID', upload.single('file'), ObjectiveController.submitAndProcess);
+  router.get('/create', ObjectiveController.createObjective);
   app.use('/objectives', router);
 };
 
+ObjectiveController.fetchAllObjectives = (req, res, next) => {
+  ObjectiveService.fetchAllObjectives()
+    .then((objective) => res.send(objective))
+    .catch((err) => next(err));
+};
 
 ObjectiveController.fetchObjective = (req, res, next) => {
   ObjectiveService.fetchObjective(req.params.objectiveID)
@@ -42,7 +48,7 @@ ObjectiveController.submitVALEObjective = (req, res, next) => {
 ObjectiveController.submitAndProcess = (req, res, next) => {
 
   console.log("Submit Objective:"+ req.params.objectiveID);
-
+  console.log(req);
   let properties = {
     objectiveID: req.params.objectiveID, objectiveXML: req.body
   };
@@ -53,6 +59,12 @@ ObjectiveController.submitAndProcess = (req, res, next) => {
   //console.log(activeObjective);
   //console.log(JSON.stringify(activeObjective.objectiveXML));
   res.send("Objective submission complete");
+};
+
+ObjectiveController.createObjective = (req, res, next) => {
+  ObjectiveService.createObjective()
+  .then((objective) => res.send(objective))
+  .catch((err) => next(err));
 };
 
 module.exports = ObjectiveController;

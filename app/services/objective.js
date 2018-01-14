@@ -16,9 +16,17 @@ String.prototype.replaceAll = function (target, replacement) {
 function Objective () {
 }
 
+Objective.prototype.fetchAllObjectives = function () {
+  var obj = ObjectiveModel.find().lean().distinct('objectiveID');
+	return obj;
+};
+
 Objective.prototype.fetchObjective= function (objectiveID) {
 
   var objective = ObjectiveModel.findOne({ objectiveID });
+
+  if (!objective.objectiveID)
+    return objective;
 
   objective.exec(function (error, _objective) {
     if (error)
@@ -150,7 +158,7 @@ Objective.prototype.submitObjective = function (properties) {
   console.log("Processing objective for " + objectiveID);
 
   objectiveXML = objectiveXML.replaceAll('\\', '');
-
+  
   var testObjects = [];
   var parser = new xml2js.Parser({explicitArray : false});
   parser.parseString (objectiveXML, function (err, result){
@@ -177,6 +185,11 @@ Objective.prototype.submitObjective = function (properties) {
     .catch ((err) => {
       return ("err");
     });
+};
+
+Objective.prototype.createObjective = function () {
+  let objective = new ObjectiveModel({objectiveID: require('mongoose').Types.ObjectId(), objectiveXML: ''});
+  return objective.save();
 };
 
 module.exports = new Objective();

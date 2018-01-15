@@ -8,7 +8,7 @@ var ResultSchema = new Schema({
     type: ObjectId
   },
   gameID: {
-    type: Number
+    type: ObjectId
   },
   rawString: {
     type: String

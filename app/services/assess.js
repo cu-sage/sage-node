@@ -66,7 +66,11 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
   return ResultModel.findOne(
     {objectiveID},function output (err, result){
 
-        assessmentCriteria=result.assessmentStatements
+        // Assign assessmentStatements to assessmentCriteria if not 'null'
+        if (result.assessmentStatements) {
+          assessmentCriteria=result.assessmentStatements
+        }
+
         currGame=JSON.stringify(result.currentGame)
 
         // Evaluate every test Statement

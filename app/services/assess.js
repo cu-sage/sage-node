@@ -65,7 +65,7 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
   console.log("Producing assessment Result for Game " + gameID);
   return ResultModel.findOne(
     {objectiveID},function output (err, result){
-
+        if (result) {
         // Assign assessmentStatements to assessmentCriteria if not 'null'
         if (result.assessmentStatements) {
           assessmentCriteria=result.assessmentStatements
@@ -85,6 +85,7 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
           }
         }
       }
+    }
   )
     //return result.assessmentResult
     .then ((assess) => {

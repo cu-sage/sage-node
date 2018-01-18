@@ -64,13 +64,13 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 
   console.log("Producing assessment Result for Game " + gameID);
   return ResultModel.findOne(
-    {objectiveID},function output (err, result){
+    {gameID, objectiveID},function output (err, result){
         if (result) {
         // Assign assessmentStatements to assessmentCriteria if not 'null'
         if (result.assessmentStatements) {
           assessmentCriteria=result.assessmentStatements
         }
-
+        //console.log(assessmentCriteria)
         currGame=JSON.stringify(result.currentGame)
 
         // Evaluate every test Statement
@@ -97,6 +97,7 @@ AssessGame.prototype.assessLoadedGame = function (properties) {
 }
 
 var insertTestResult = function (gameID, objectiveID, resultstmt) {
+  console.log("in insertTestResult " + gameID + "obj " + objectiveID + "res " + resultstmt.pass)
   return ResultModel.findOneAndUpdate(
     {objectiveID, gameID},
     //{$set: {rawString: "aaaabbbcc"}}, {upsert: true}
@@ -130,6 +131,7 @@ var testBlockType = function (gameID, objectiveID, assessmentCriteria, statement
         actionStmt = {"type": assessmentCriteria[statementID].actionBlockType,"command": assessmentCriteria[statementID].actionBlockName}
       }
       resultStatement = ({"pass": false, "description": "Game should have parallelization", "actions": actionStmt});
+      console.log(resultStatement)
       insertTestResult(gameID, objectiveID, resultStatement)
     }
   }

@@ -1,6 +1,22 @@
 node_modules/
+data/db
+uploads
+.idea
 public/components
 .nyc_output
 .sass-cache
 
 .DS_Store
+*.wt
+*.2017-10-25T23-01-33Z-00000
+data/db/diagnostic.data/metrics.2017-10-25T23-41-05Z-00000
+data/db/diagnostic.data/metrics.2017-10-25T23-03-02Z-00000
+*.lock
+data/db/storage.bson
+data/db/WiredTiger
+data/db/WiredTiger.turtle
+data/db/diagnostic.data/metrics.2017-10-26T23-15-28Z-00000
+.idea/modules.xml
+
+*.log
+app/controllers/__tests__/sampleVALExml

@@ -21,7 +21,7 @@ module.exports = function(app, config) {
   app.use(logger('dev'));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({
-    extended: true
+    extended: false
   }));
   app.use(bodyParser.text());
   app.use(cookieParser());
@@ -35,11 +35,24 @@ module.exports = function(app, config) {
     require(controller)(app);
   });
 
+  app.get('/', function (req, res) {
+    res.send("SAGE Assessment Server v.1.2");
+
+    /*db.student.find({}, function(err, stu){
+      if(err){
+        console.log(err);
+      } else {
+        res.send('success')
+        //res.render('index', {title: 'Assessments', assessments: stu});
+      }
+    });*/
+  });
+/*
   app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
-  });
+  });*/
 
   if(app.get('env') === 'development'){
     app.use(function (err, req, res, next) {

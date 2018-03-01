@@ -16,3 +16,11 @@ models.forEach(function (model) {
 var app = express();
 
 module.exports = require('./config/express')(app, config);
+
+/* If we are running in IIS, we did not start via "node ./bin/www".
+Therefore, start listening here. */ 
+if (process.env.hasOwnProperty("IISNODE_VERSION")) {
+  app.listen(config.port, function () {
+    console.log('Express server listening on port ' + config.port);
+  });
+}

@@ -1,28 +1,26 @@
 let mongoose = require('mongoose');
 let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
-let ObjectId = Schema.Types.ObjectId;
 
 var SpriteSchema = new Schema({
   Name: {
     type: String,
     required: true
   },
-  Scripts : {
-    type : [String],
+  Scripts: {
+    type: [String],
     required: true
   }
 });
 
-SpriteSchema.virtual('NewSprite').get(function() {
+SpriteSchema.virtual('NewSprite').get(function () {
   return this.Name;
-  return this.Scripts;
+  // return this.Scripts;
 });
 
-SpriteSchema.virtual('Log').get(function() {
+SpriteSchema.virtual('Log').get(function () {
   return this.Name;
 });
-
 
 SpriteSchema.plugin(idValidator);
 

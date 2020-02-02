@@ -18,6 +18,9 @@ var StudentSchema = new Schema({
   },
   highscore: {
     type: Number
+  },
+  behaviorType: {
+    type: String
   }
 });
 

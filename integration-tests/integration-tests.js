@@ -1,4 +1,5 @@
-
+/* global before it describe expect */
+/* eslint-disable no-unused-expressions */
 var request = require('request-promise-native');
 var mongoose = require('mongoose');
 var ObjectId = require('mongoose').Types.ObjectId;
@@ -320,19 +321,19 @@ describe('/quests endpoints', () => {
 
 describe('/assignments endpoints', () => {
   var xml = '<xml>Some test xml</xml>';
-  var points_total = 14;
-  var quest_sort = 18;
-  var points_unlock = 22;
+  var pointsTotal = 14;
+  var questSort = 18;
+  var pointsUnlock = 22;
 
   describe('POST /assignments/new', () => {
     it('should return the new assignment', () => {
       return post('/assignments/new', {
         xml,
         quest_id: quest.id,
-        quest_sort,
+        questSort,
         teacher: teacher.id,
-        points_total,
-        points_unlock
+        pointsTotal,
+        pointsUnlock
       })
         .then(res => {
           assignment = res;
@@ -341,16 +342,16 @@ describe('/assignments endpoints', () => {
           expect(res).to.have.property('quest_id')
             .which.equals(quest.id);
           expect(res).to.have.property('quest_sort')
-            .which.equals(quest_sort);
+            .which.equals(questSort);
           expect(res).to.have.property('teacher')
             .which.deep.equals({
               id: teacher.id,
               name: teacher.name
             });
           expect(res).to.have.property('points_total')
-            .which.equals(points_total);
+            .which.equals(pointsTotal);
           expect(res).to.have.property('points_unlock')
-            .which.equals(points_unlock);
+            .which.equals(pointsUnlock);
         });
     });
   });
@@ -381,11 +382,11 @@ describe('/assignments endpoints', () => {
   describe('POST /assignments/:id/update_xml', () => {
     it('should return the updated assignment', () => {
       xml = '<xml>Some updated test xml</xml>';
-      points_total += 10;
+      pointsTotal += 10;
 
       return post(`/assignments/${assignment.id}/update_xml`, {
         xml,
-        points_total
+        pointsTotal
       })
         .then(res => {
           assignment = res;
@@ -393,15 +394,15 @@ describe('/assignments endpoints', () => {
           expect(res).to.have.property('xml')
             .which.equals(xml);
           expect(res).to.have.property('points_total')
-            .which.equals(points_total);
+            .which.equals(pointsTotal);
         });
     });
   });
 
   describe('POST /assignments/:id/update_quest', () => {
     before(() => {
-      quest_sort += 2;
-      points_unlock += 10;
+      questSort += 2;
+      pointsUnlock += 10;
 
       return post('/quests/new', {
         teacher: teacher.id
@@ -409,20 +410,19 @@ describe('/assignments endpoints', () => {
         .then(newQuest => {
           quest = newQuest;
         });
-
     });
 
     it('should return the updated assignment', () => {
       return post(`/assignments/${assignment.id}/update_quest`, {
         quest_id: quest.id,
-        quest_sort,
-        points_unlock
+        questSort,
+        pointsUnlock
       })
         .then(res => {
           assignment = res;
 
           expect(res.xml).to.equal(xml);
-          expect(res.points_total).to.equal(points_total);
+          expect(res.points_total).to.equal(pointsTotal);
         });
     });
 

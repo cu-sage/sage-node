@@ -1,10 +1,11 @@
 // This model contains the same functionalities as the deprecated project model.
 //
 let mongoose = require('mongoose');
-//let idValidator = require('mongoose-id-validator');
+// let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
+// TEST NEW SCHEMA
 var GameSchema = new Schema({
   gameID: {
     type: ObjectId
@@ -17,10 +18,14 @@ var GameSchema = new Schema({
   objectiveID: {
     type: ObjectId
   },
-  sprites : {
-    type : []
+
+  Text: String,
+  HintMsg: String,
+  extractedGameJSON: [],
+  sprites: {
+    type: []
   },
-  gameJSON : [],
+  gameJSON: []
 }, {
   toObject: {
     virtuals: true

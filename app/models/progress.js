@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-//let idValidator = require('mongoose-id-validator');
+// let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
@@ -10,11 +10,11 @@ var ProgressSchema = new Schema({
   assignmentID: {
     type: ObjectId
   },
-  lastUpdatedsb2FileLocation : {
-    type : String
+  lastUpdatedsb2FileLocation: {
+    type: String
   },
-  progressJSON : [],
-  'results' : {},
+  progressJSON: [],
+  'results': {}
 }, {
   toObject: {
     virtuals: true

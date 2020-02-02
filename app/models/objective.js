@@ -1,11 +1,14 @@
 let mongoose = require('mongoose');
-//let idValidator = require('mongoose-id-validator');
+// let idValidator = require('mongoose-id-validator');
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
 var ObjectiveSchema = new Schema({
   objectiveID: {
     type: ObjectId
+  },
+  objectiveName: {
+    type: String
   },
   objectiveFileLocation: {
     type: String

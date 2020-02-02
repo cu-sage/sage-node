@@ -1,3 +1,5 @@
+/* global beforeEach it describe expect */
+/* eslint-disable no-unused-expressions */
 
 var ObjectId = require('mongoose').Types.ObjectId;
 var Student = require('../student');

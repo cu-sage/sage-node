@@ -1,5 +1,5 @@
-
-var mapKeys = function(map, object) {
+/* global _ */
+var mapKeys = function (map, object) {
   // Remove extraneous properties
   object = _.pickBy(object, (value, key) =>
     _.includes(_.keys(map), key));
@@ -8,7 +8,7 @@ var mapKeys = function(map, object) {
   return _.mapKeys(object, (value, key) => map[key]);
 };
 
-var Formatter = function(databaseToApiMap) {
+var Formatter = function (databaseToApiMap) {
   this.databaseToApiMap = databaseToApiMap;
   this.apiToDatabaseMap = _.invert(databaseToApiMap);
 
@@ -16,7 +16,7 @@ var Formatter = function(databaseToApiMap) {
   this.fromApi = this.fromApi.bind(this);
 };
 
-Formatter.prototype.toApi = function(object) {
+Formatter.prototype.toApi = function (object) {
   if (object instanceof Array) {
     return object.map(o => mapKeys(this.databaseToApiMap, o));
   }
@@ -24,7 +24,7 @@ Formatter.prototype.toApi = function(object) {
   return mapKeys(this.databaseToApiMap, object);
 };
 
-Formatter.prototype.fromApi = function(object) {
+Formatter.prototype.fromApi = function (object) {
   if (object instanceof Array) {
     return object.map(o => mapKeys(this.apiToDatabaseMap, o));
   }
@@ -32,7 +32,7 @@ Formatter.prototype.fromApi = function(object) {
   return mapKeys(this.apiToDatabaseMap, object);
 };
 
-var format = function(databaseToApiMap) {
+var format = function (databaseToApiMap) {
   return new Formatter(databaseToApiMap);
 };
 

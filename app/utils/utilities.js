@@ -1,19 +1,17 @@
 var fs = require('fs');
 
-let copyFile = (source, target) =>  {
-
-  let p = new Promise ((resolve, reject) => {
-
+let copyFile = (source, target) => {
+  let p = new Promise((resolve, reject) => {
     var rd = fs.createReadStream(source);
-    rd.on('error', function(err) {
-      reject (err);
+    rd.on('error', function (err) {
+      reject(err);
     });
 
     var wr = fs.createWriteStream(target);
-    wr.on('error', function(err) {
-      reject (err);
+    wr.on('error', function (err) {
+      reject(err);
     });
-    wr.on('close', function(ex) {
+    wr.on('close', function (ex) {
       resolve(target);
     });
     rd.pipe(wr);
@@ -22,4 +20,4 @@ let copyFile = (source, target) =>  {
   return p;
 };
 
-module.exports = {copyFile};
+module.exports = { copyFile };

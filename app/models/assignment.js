@@ -8,16 +8,16 @@ var AssignmentSchema = new Schema({
     type: ObjectId,
     required: true
   },
-  instructorID : {
-    type : ObjectId,
+  instructorID: {
+    type: ObjectId,
     required: true
   },
-  sb2FileLocation : {
-    type : String,
+  sb2FileLocation: {
+    type: String,
     required: true
   },
-  assessmentXML : {
-    type : String
+  assessmentXML: {
+    type: String
   }
 });
 

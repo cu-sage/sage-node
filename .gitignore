@@ -20,3 +20,18 @@ data/db/diagnostic.data/metrics.2017-10-26T23-15-28Z-00000
 
 *.log
 app/controllers/__tests__/sampleVALExml
+
+# Version.txt (BuildID and timestamp)
+version.txt
+
+# gulp package artifacts
+_package/*
+Package.zip
+
+# Gradle / Intellij temps
+.gradle/
+.vsts-ci.yml
+sage-node.iml
+
+# Test coverage
+coverage/

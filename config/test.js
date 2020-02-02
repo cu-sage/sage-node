@@ -25,4 +25,4 @@ chai.use(require('chai-things'));
 global.expect = chai.expect;
 
 global.sinon = require('sinon');
-require('sinon-mocha').enhance(sinon);
+// require('sinon-mocha').enhance(sinon);

@@ -1,10 +1,13 @@
 
 global._ = require('lodash');
 
-var express = require('express'),
-  config = require('./config/config'),
-  glob = require('glob'),
-  mongoose = require('mongoose');
+var express = require('express');
+
+var config = require('./config/config');
+
+var glob = require('glob');
+
+var mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
 
@@ -19,12 +22,12 @@ module.exports = require('./config/express')(app, config);
 
 /* If we are running in IIS, we did not start via "node ./bin/www".
 Therefore, start listening here. */
-if (process.env.hasOwnProperty("IISNODE_VERSION")) {
-  var http = require('http');
+if (process.env.hasOwnProperty('IISNODE_VERSION')) {
+  require('http');
   mongoose.connect(config.db);
   var db = mongoose.connection;
 
-  db.once('open', function(){
+  db.once('open', function () {
     console.log('Connected to ' + config.db);
   });
   db.on('error', function () {

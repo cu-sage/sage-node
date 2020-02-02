@@ -5,9 +5,9 @@ var Response = require('../utils/response');
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var __rejectEmptyResult = assignment =>
-  assignment ? assignment : Promise.reject(Response[404]('assignment not found'));
+  assignment || Promise.reject(Response[404]('assignment not found'));
 
-var AssignmentService = function() {};
+var AssignmentService = function () {};
 
 AssignmentService.prototype.findAll = () => {
   return Assignment.find();
@@ -35,26 +35,20 @@ AssignmentService.prototype.findByQuest = questId => {
 };
 
 AssignmentService.prototype.create = (properties) => {
-  
-  return Assignment.findOne({assignmentID:properties.assignmentID})
-  .then((assignment) => {
-    if (assignment) return Promise.reject(Response[400]('Already exists'));
-    let newAssignment = new Assignment(properties);
-    return newAssignment.save();
-
-  }).catch((error) => {
-
-    return Promise.reject(error);
-  });
-  
+  return Assignment.findOne({ assignmentID: properties.assignmentID })
+    .then((assignment) => {
+      if (assignment) return Promise.reject(Response[400]('Already exists'));
+      let newAssignment = new Assignment(properties);
+      return newAssignment.save();
+    }).catch((error) => {
+      return Promise.reject(error);
+    });
 };
 
 AssignmentService.prototype.updateXml = (assignmentID, assessmentXML) => {
-  
-  return Assignment.findOne({assignmentID: assignmentID})
+  return Assignment.findOne({ assignmentID: assignmentID })
     .then(__rejectEmptyResult)
     .then((assignment) => {
-
       assignment.assessmentXML = assessmentXML;
       return assignment.save();
     });

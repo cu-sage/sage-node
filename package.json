@@ -49,7 +49,7 @@
     "fs": "0.0.1-security",
     "gulp": "^4.0.0",
     "gulp-livereload": "^3.8.0",
-    "gulp-nodemon": "^2.0.2",
+    "gulp-nodemon": "^2.5.0",
     "gulp-plumber": "^1.0.0",
     "gulp-ruby-sass": "^2.0.1",
     "gulp-sass": "^3.1.0",
